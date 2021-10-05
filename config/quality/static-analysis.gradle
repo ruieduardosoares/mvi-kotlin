@@ -1,0 +1,7 @@
+ext {
+    reportXml = true
+    reportHtml = !reportXml
+    ignoreFailures = true
+}
+apply from: "$project.rootDir/config/quality/detekt/detekt.gradle"
+apply from: "$project.rootDir/config/quality/cpd/cpd.gradle"

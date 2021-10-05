@@ -1,0 +1,12 @@
+apply plugin: "de.aaschmid.cpd"
+cpd {
+    language = "cpp"
+    toolVersion = "6.10.0"
+}
+cpdCheck {
+    ignoreFailures = project.ext.ignoreFailures
+    reports {
+        xml.enabled = project.ext.reportXml
+    }
+    source = files("$project.projectDir/src/main/java")
+}
