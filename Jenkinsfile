@@ -2,14 +2,14 @@ pipeline {
     agent any
     stages {
         stage('Setup android docker') {
-//            steps {
-               //nothing
-//            }
+           steps {
+               echo 'Set up android docker!'
+           }
         }
         stage('Teardown android docker') {
-//             steps {
-               //nothing
-//             }
+            steps {
+               echo 'Teardown android docker!'
+            }
         }
     }
 }
