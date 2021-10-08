@@ -1,17 +1,24 @@
+def gradlew = "docker exec android-jenkins /app/gradlew -p /app "
 pipeline {
     agent any
     stages {
-        stage('Setup android docker') {
+        stage("Setup android docker") {
             steps {
-                dir('tools/dockers/android-sdk') {
-                    sh 'setup.sh'
+                dir("tools/dockers/android-sdk") {
+                    sh "./teardown.sh"
+                    sh "./setup.sh"
                 }
             }
         }
-        stage('Teardown android docker') {
+        stage("Assemble") {
             steps {
-                dir('tools/dockers/android-sdk') {
-                    sh 'teardown.sh'
+                sh "$gradlew clean assembleDebug"
+            }
+        }
+        stage("Teardown android docker") {
+            steps {
+                dir("tools/dockers/android-sdk") {
+                    sh "./teardown.sh"
                 }
             }
         }
