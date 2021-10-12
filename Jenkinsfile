@@ -17,7 +17,7 @@ pipeline {
         }
         stage('Tests') {
             steps {
-                sh './gradlew clean testDebugUnitTest'
+                sh './gradlew testDebugUnitTest'
             }
             post {
                 success {
@@ -27,13 +27,13 @@ pipeline {
         }
         stage('Code quality') {
             steps {
-                sh './gradlew clean lintDebug'
+                sh './gradlew lintDebug'
                 recordIssues tool: androidLintParser(pattern: 'app/build/reports/lint-results-debug.xml')
 
-                sh './gradlew clean detektDebug'
+                sh './gradlew detektDebug'
                 recordIssues tool: detekt(pattern: 'app/build/reports/detekt.xml')
 
-                sh './gradlew clean cpdCheck'
+                sh './gradlew cpdCheck'
                 recordIssues tool: cpd(pattern: 'app/build/reports/cpd/cpdCheck.xml')
             }
         }
