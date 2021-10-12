@@ -10,14 +10,14 @@ pipeline {
         skipStagesAfterUnstable()
     }
     stages {
-        stage("Assemble") {
+        stage('Assemble') {
             steps {
-                sh "./gradlew clean assembleDebug"
+                sh './gradlew clean assembleDebug'
             }
         }
-        stage("Tests") {
+        stage('Tests') {
             steps {
-                sh "./gradlew clean testDebugUnitTest"
+                sh './gradlew clean testDebugUnitTest'
             }
             post {
                 success {
@@ -25,10 +25,13 @@ pipeline {
                 }
             }
         }
-        stage("Code quality") {
+        stage('Code quality') {
             steps {
-                sh "./gradlew clean lintDebug"
+                sh './gradlew clean lintDebug'
                 recordIssues tool: androidLintParser(pattern: 'app/build/reports/lint-results-debug.xml')
+
+                sh './gradlew clean detektDebug'
+                recordIssues tool: detekt(pattern: 'app/build/reports/detekt.xml')
             }
         }
     }
@@ -36,7 +39,7 @@ pipeline {
         //Here because we are overriding jenkins user with container root user
         //Always cleanup at the end regardless of pipeline status
         always {
-            sh "rm -R .gradle/ build app/build"
+            sh 'rm -R .gradle/ build app/build'
         }
     }
 }
