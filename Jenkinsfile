@@ -25,6 +25,12 @@ pipeline {
                 }
             }
         }
+        stage("Code quality") {
+            steps {
+                sh "./gradlew clean lintDebug"
+                recordIssues tool: androidLintParser(pattern: 'app/build/reports/lint-results-debug.xml')
+            }
+        }
     }
     post {
         //Here because we are overriding jenkins user with container root user
