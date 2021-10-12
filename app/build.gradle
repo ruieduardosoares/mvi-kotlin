@@ -118,6 +118,7 @@ android {
                     events "passed", "skipped", "failed", "standardOut", "standardError"
                     showStandardStreams = true
                 }
+                ignoreFailures = true
             }
 
             // Include compiled resource into testing environment in case we use

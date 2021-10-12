@@ -6,17 +6,31 @@ pipeline {
             args '-u root:root' //todo here because gradlew needs to access root folder /opt
         }
     }
+    options {
+        skipStagesAfterUnstable()
+    }
     stages {
         stage("Assemble") {
             steps {
                 sh "./gradlew clean assembleDebug"
             }
         }
-        //todo here because we are overriding jenkins user with container root user
-        stage("Cleanup") {
+        stage("Tests") {
             steps {
-                sh "rm -R .gradle/ build app/build"
+                sh "./gradlew clean testDebugUnitTest"
             }
+            post {
+                success {
+                    junit 'app/build/test-results/**/*.xml'
+                }
+            }
+        }
+    }
+    post {
+        //Here because we are overriding jenkins user with container root user
+        //Always cleanup at the end regardless of pipeline status
+        always {
+            sh "rm -R .gradle/ build app/build"
         }
     }
 }
