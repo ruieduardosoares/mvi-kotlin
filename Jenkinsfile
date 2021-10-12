@@ -32,6 +32,9 @@ pipeline {
 
                 sh './gradlew clean detektDebug'
                 recordIssues tool: detekt(pattern: 'app/build/reports/detekt.xml')
+
+                sh './gradlew clean cpdCheck'
+                recordIssues tool: cpd(pattern: 'app/build/reports/cpd/cpdCheck.xml')
             }
         }
     }
