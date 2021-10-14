@@ -5,3 +5,4 @@ ext {
 }
 apply from: "$project.rootDir/config/quality/detekt/detekt.gradle"
 apply from: "$project.rootDir/config/quality/cpd/cpd.gradle"
+apply from: "$project.rootDir/config/quality/jacoco/jacoco.gradle"
