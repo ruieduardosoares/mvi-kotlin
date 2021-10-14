@@ -5,7 +5,10 @@ jacoco {
     toolVersion = "0.8.7"
 }
 tasks.withType(Test) {
+    // Allows coverage for robolectric and espresso tests
     jacoco.includeNoLocationClasses = true
+    //https://github.com/gradle/gradle/issues/5184#issuecomment-457865951
+    jacoco.excludes = ['jdk.internal.*']
 }
 task jacocoTestReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
     group = "Reporting"
