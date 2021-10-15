@@ -22,33 +22,33 @@ pipeline {
             post {
                 success {
                     junit 'app/build/test-results/**/*.xml'
+
+                    publishHTML(target: [allowMissing         : false,
+                                         alwaysLinkToLastBuild: true,
+                                         keepAll              : true,
+                                         reportDir            : 'app/build/reports/tests/testDebugUnitTest',
+                                         reportFiles          : 'index.html',
+                                         reportName           : 'Tests',
+                                         reportTitles         : 'The Report'])
+
+                    step([$class                    : 'JacocoPublisher',
+                          buildOverBuild            : true,
+                          changeBuildStatus         : true,
+                          minimumInstructionCoverage: '86',
+                          minimumBranchCoverage     : '60',
+                          minimumClassCoverage      : '88',
+                          maximumComplexityCoverage : '61',
+                          minimumLineCoverage       : '95',
+                          minimumMethodCoverage     : '76',
+                          execPattern               : '**/build/jacoco/*.exec',
+                          classPattern              : '**/build/tmp/kotlin-classes',
+                          sourcePattern             : 'src/main/java',
+                          exclusionPattern          : 'src/test/**'])
                 }
             }
         }
         stage('Code quality') {
             steps {
-
-                publishHTML(target: [allowMissing         : false,
-                                     alwaysLinkToLastBuild: true,
-                                     keepAll              : true,
-                                     reportDir            : 'app/build/reports/tests/testDebugUnitTest',
-                                     reportFiles          : 'index.html',
-                                     reportName           : 'Tests',
-                                     reportTitles         : 'The Report'])
-
-                step([$class                    : 'JacocoPublisher',
-                      buildOverBuild            : true,
-                      changeBuildStatus         : true,
-                      minimumInstructionCoverage: '86',
-                      minimumBranchCoverage     : '60',
-                      minimumClassCoverage      : '88',
-                      maximumComplexityCoverage : '61',
-                      minimumLineCoverage       : '95',
-                      minimumMethodCoverage     : '76',
-                      execPattern               : '**/build/jacoco/*.exec',
-                      classPattern              : '**/build/tmp/kotlin-classes',
-                      sourcePattern             : 'src/main/java',
-                      exclusionPattern          : 'src/test/**'])
 
                 sh './gradlew lintDebug'
                 recordIssues tool: androidLintParser(pattern: 'app/build/reports/lint-results-debug.xml')
