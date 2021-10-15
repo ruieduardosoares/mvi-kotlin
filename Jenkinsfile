@@ -15,7 +15,7 @@ pipeline {
                 sh './gradlew clean assembleDebug'
             }
         }
-        stage('Tests') {
+        stage('Tests & Coverage') {
             steps {
                 sh './gradlew testDebugUnitTest'
             }
@@ -54,7 +54,7 @@ pipeline {
                 publishHTML(target: [allowMissing         : false,
                                      alwaysLinkToLastBuild: true,
                                      keepAll              : true,
-                                     reportDir            : 'app/build/outputs/dexcount/chart',
+                                     reportDir            : 'app/build/outputs/dexcount/debug/chart',
                                      reportFiles          : 'index.html',
                                      reportName           : 'Android Dex Count',
                                      reportTitles         : 'The Report'])
