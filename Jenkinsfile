@@ -27,6 +27,21 @@ pipeline {
         }
         stage('Code quality') {
             steps {
+
+                step([$class                    : 'JacocoPublisher',
+                      buildOverBuild            : true,
+                      changeBuildStatus         : true,
+                      minimumInstructionCoverage: '86',
+                      minimumBranchCoverage     : '60',
+                      maximumClassCoverage      : '88',
+                      minimumComplexityCoverage : '61',
+                      minimumLineCoverage       : '95',
+                      minimumMethodCoverage     : '76',
+                      execPattern               : '**/build/jacoco/*.exec',
+                      classPattern              : '**/build/tmp/kotlin-classes',
+                      sourcePattern             : 'src/main/java',
+                      exclusionPattern          : 'src/test/**'])
+
                 sh './gradlew lintDebug'
                 recordIssues tool: androidLintParser(pattern: 'app/build/reports/lint-results-debug.xml')
 
