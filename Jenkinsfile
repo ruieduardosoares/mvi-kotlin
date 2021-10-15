@@ -28,6 +28,14 @@ pipeline {
         stage('Code quality') {
             steps {
 
+                publishHTML(target: [allowMissing         : false,
+                                     alwaysLinkToLastBuild: true,
+                                     keepAll              : true,
+                                     reportDir            : 'app/build/reports/tests/testDebugUnitTest',
+                                     reportFiles          : 'index.html',
+                                     reportName           : 'Tests',
+                                     reportTitles         : 'The Report'])
+
                 step([$class                    : 'JacocoPublisher',
                       buildOverBuild            : true,
                       changeBuildStatus         : true,
