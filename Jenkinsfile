@@ -61,22 +61,15 @@ pipeline {
 
                 plot csvFileName: 'plot-8e54e334-ab7b-4c9f-94f7-b9d8965723df.csv',
                         csvSeries: [[
-                                            file            : 'summary.csv',
-                                            exclusionValues : '',
+                                            file            : 'app/build/outputs/dexcount/debug/summary.csv',
                                             displayTableFlag: false,
-                                            inclusionFlag   : 'OFF',
-                                            url             : '']],
-                        group: 'Plot Group',
-                        title: 'Plot Title',
+                                            inclusionFlag   : 'OFF']],
+                        group: 'Android',
+                        title: 'Dex CountPlot',
                         style: 'line',
                         exclZero: false,
                         keepRecords: false,
-                        logarithmic: false,
-                        numBuilds: '',
-                        useDescr: false,
-                        yaxis: '',
-                        yaxisMaximum: '',
-                        yaxisMinimum: ''
+                        logarithmic: false
 
                 sh './gradlew lintDebug'
                 recordIssues tool: androidLintParser(pattern: 'app/build/reports/lint-results-debug.xml')
