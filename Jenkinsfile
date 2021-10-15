@@ -50,6 +50,34 @@ pipeline {
         stage('Code quality') {
             steps {
 
+                sh './gradlew :app:countDebugDexMethods'
+                publishHTML(target: [allowMissing         : false,
+                                     alwaysLinkToLastBuild: true,
+                                     keepAll              : true,
+                                     reportDir            : 'app/build/outputs/dexcount/chart',
+                                     reportFiles          : 'index.html',
+                                     reportName           : 'Android Dex Count',
+                                     reportTitles         : 'The Report'])
+
+                plot csvFileName: 'plot-8e54e334-ab7b-4c9f-94f7-b9d8965723df.csv',
+                        csvSeries: [[
+                                            file            : 'summary.csv',
+                                            exclusionValues : '',
+                                            displayTableFlag: false,
+                                            inclusionFlag   : 'OFF',
+                                            url             : '']],
+                        group: 'Plot Group',
+                        title: 'Plot Title',
+                        style: 'line',
+                        exclZero: false,
+                        keepRecords: false,
+                        logarithmic: false,
+                        numBuilds: '',
+                        useDescr: false,
+                        yaxis: '',
+                        yaxisMaximum: '',
+                        yaxisMinimum: ''
+
                 sh './gradlew lintDebug'
                 recordIssues tool: androidLintParser(pattern: 'app/build/reports/lint-results-debug.xml')
 
