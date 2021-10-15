@@ -15,7 +15,7 @@ buildscript {
 
         //Code quality tools plugins
         classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.16.0"
-        classpath "com.getkeepsafe.dexcount:dexcount-gradle-plugin:2.1.0-RC01"
+        classpath "com.getkeepsafe.dexcount:dexcount-gradle-plugin:3.0.1"
         classpath "de.aaschmid:gradle-cpd-plugin:3.2"
 
         //Automatic app versioning plugin

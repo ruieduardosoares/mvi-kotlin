@@ -4,7 +4,7 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 
-class StateStreamToStateRelayBinder<S : Any>(
+internal class StateStreamToStateRelayBinder<S : Any>(
     private val mViewRenderRelaySubject: BehaviorSubject<S>
 ) {
 

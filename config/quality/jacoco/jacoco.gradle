@@ -1,0 +1,45 @@
+//Guide https://www.veskoiliev.com/how-to-setup-jacoco-for-android-project-with-java-kotlin-and-multiple-flavours/
+apply plugin: 'jacoco'
+jacoco {
+    //https://stackoverflow.com/a/67730880
+    toolVersion = "0.8.7"
+}
+tasks.withType(Test) {
+    // Allows coverage for robolectric and espresso tests
+    jacoco.includeNoLocationClasses = true
+    //https://github.com/gradle/gradle/issues/5184#issuecomment-457865951
+    jacoco.excludes = ['jdk.internal.*']
+}
+task jacocoTestReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
+    group = "Reporting"
+    description = "Generate Jacoco coverage reports for the debug build tests."
+
+    reports {
+        xml.getRequired().set(project.ext.reportXml)
+        html.getRequired().set(project.ext.reportHtml)
+    }
+    jacocoClasspath = configurations['jacocoAnt']
+    def fileFilter = ['**/R.class',
+                      '**/R$*.class',
+                      '**/BuildConfig.*',
+                      '**/Manifest*.*',
+                      '**/*Test*.*',
+                      'android/**/*.*',
+                      '**/*$ViewInjector*.*',
+                      '**/*$ViewBinder*.*',
+                      '**/*MembersInjector*.*',
+                      '**/BuildConfig.*',
+                      '**/Manifest*.*',
+                      '**/*$Lambda$*.class',
+                      '**/*Factory*.class',
+                      '**/*$Builder*',
+                      '**/*$Parcelable*.*',
+                      '**/*DaggerApplicationComponent*.class']
+    def debugTree = fileTree(dir: "${buildDir}/tmp/kotlin-classes/debug", excludes: fileFilter)
+    def mainSrc = "${project.projectDir}/src/main/java"
+    sourceDirectories.from = files([mainSrc])
+    classDirectories.from = files([debugTree])
+    executionData.from = files("${buildDir}/jacoco/testDebugUnitTest.exec")
+}
+
+
