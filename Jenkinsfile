@@ -49,7 +49,18 @@ pipeline {
         }
         stage('Code quality') {
             steps {
+                sh './gradlew lintDebug'
+                recordIssues tool: androidLintParser(pattern: 'app/build/reports/lint-results-debug.xml')
 
+                sh './gradlew detektDebug'
+                recordIssues tool: detekt(pattern: 'app/build/reports/detekt.xml')
+
+                sh './gradlew cpdCheck'
+                recordIssues tool: cpd(pattern: 'app/build/reports/cpd/cpdCheck.xml')
+            }
+        }
+        stage("Dexcount & Size") {
+            steps {
                 sh './gradlew :app:countDebugDexMethods'
                 publishHTML(target: [allowMissing         : false,
                                      alwaysLinkToLastBuild: true,
@@ -60,25 +71,17 @@ pipeline {
                                      reportTitles         : 'The Report'])
 
                 plot csvFileName: 'plot-8e54e334-ab7b-4c9f-94f7-b9d8965723df.csv',
-                        csvSeries: [[
-                                            file            : 'app/build/outputs/dexcount/debug/summary.csv',
-                                            displayTableFlag: false,
-                                            inclusionFlag   : 'OFF']],
+                        csvSeries: [[file: 'app/build/outputs/dexcount/debug/summary.csv', displayTableFlag: false, inclusionFlag: 'OFF']],
                         group: 'Android',
                         title: 'Dex CountPlot',
-                        style: 'line',
-                        exclZero: false,
-                        keepRecords: false,
-                        logarithmic: false
+                        style: 'line'
 
-                sh './gradlew lintDebug'
-                recordIssues tool: androidLintParser(pattern: 'app/build/reports/lint-results-debug.xml')
-
-                sh './gradlew detektDebug'
-                recordIssues tool: detekt(pattern: 'app/build/reports/detekt.xml')
-
-                sh './gradlew cpdCheck'
-                recordIssues tool: cpd(pattern: 'app/build/reports/cpd/cpdCheck.xml')
+                sh 'stat --format=%s app/build/outputs/aar/app-debug.aar >> app/build/appsize.csv'
+                plot csvFileName: 'plot-8e54e334-ab7b-4c9f-94f7-48484848.csv',
+                        csvSeries: [[file: 'app/build/appsize.csv', displayTableFlag: false, inclusionFlag: 'OFF']],
+                        group: 'Android',
+                        title: 'AAR File size in bytes',
+                        style: 'line'
             }
         }
     }
