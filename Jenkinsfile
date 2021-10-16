@@ -76,7 +76,7 @@ pipeline {
                         title: 'Dex CountPlot',
                         style: 'line'
 
-                sh 'stat --format=%s app/build/outputs/aar/app-debug.aar >> app/build/appsize.csv'
+                sh 'printf "size\\n$(stat --format=%s app/build/outputs/aar/app-debug.aar)" >> app/build/appsize.csv'
                 plot csvFileName: 'plot-8e54e334-ab7b-4c9f-94f7-48484848.csv',
                         csvSeries: [[file: 'app/build/appsize.csv', displayTableFlag: false, inclusionFlag: 'OFF']],
                         group: 'Android',
