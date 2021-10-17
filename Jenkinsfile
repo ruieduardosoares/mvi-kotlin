@@ -1,5 +1,3 @@
-import java.text.DecimalFormat
-
 pipeline {
     agent {
         dockerfile {
@@ -78,25 +76,9 @@ pipeline {
                         title: 'Dex Count',
                         style: 'line'
 
-                sh 'mv app/build/outputs/aar/app-debug.aar .'
-                sh 'chown 1000:1000 app-debug.aar'
-                script {
-                    def file = new File("app-debug.aar")
-                    def sizeMB = file.length() / 10**5
-                    def df = new DecimalFormat("#.##");
-                    def formatted = df.format(sizeMB)
-                    printf(formatted)
-                    def appsizeCsv = new File("appsize.csv")
-                    appsizeCsv.append("size")
-                    appsizeCsv.append("\n")
-                    appsizeCsv.append(formatted)
-                }
-                sh 'ls -la'
-                sh 'rm app-debug.aar'
-                sh 'chown 1000:1000 appsize.csv'
-                sh 'chmod 777 appsize.csv'
+                sh './gradlew app:writeDebugAppAarSizeToCsv'
                 plot csvFileName: 'plot-8e54e334-ab7b-4c9f-94f7-48484848.csv',
-                        csvSeries: [[file: 'appsize.csv', displayTableFlag: false, inclusionFlag: 'OFF']],
+                        csvSeries: [[file: 'app/build/appsize.csv', displayTableFlag: false, inclusionFlag: 'OFF']],
                         group: 'Android',
                         title: 'AAR File size in bytes',
                         style: 'line'
