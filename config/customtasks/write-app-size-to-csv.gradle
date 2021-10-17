@@ -1,0 +1,21 @@
+import java.text.DecimalFormat
+
+task writeDebugAppAarSizeToCsv {
+    group('Reporting')
+    description('Reads app-debug.aar file size and writes it to a csv file')
+    doLast {
+        def appAarFile = new File("app/build/outputs/aar/app-debug.aar")
+        if (!appAarFile.exists()) {
+            throw new IllegalStateException("Cannot find app-debug.aar, perhaps not assembled yet")
+        }
+        def sizeMB = appAarFile.length() / 10**5
+        def df = new DecimalFormat("#.##");
+        def sizeMbFormatted = df.format(sizeMB)
+        def appSizeCsvFile = new File("app/build/appsize.csv")
+        appSizeCsvFile.setReadable(true)
+        appSizeCsvFile.setWritable(true)
+        appSizeCsvFile.append("size")
+        appSizeCsvFile.append("\n")
+        appSizeCsvFile.append(sizeMbFormatted)
+    }
+}
