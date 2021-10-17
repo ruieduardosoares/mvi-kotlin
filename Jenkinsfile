@@ -1,3 +1,5 @@
+import java.text.DecimalFormat
+
 pipeline {
     agent {
         dockerfile {
@@ -12,7 +14,7 @@ pipeline {
     stages {
         stage('Assemble') {
             steps {
-                sh './gradlew clean assembleDebug'
+                sh './gradlew assembleDebug'
             }
         }
         stage('Tests & Coverage') {
@@ -73,12 +75,28 @@ pipeline {
                 plot csvFileName: 'plot-8e54e334-ab7b-4c9f-94f7-b9d8965723df.csv',
                         csvSeries: [[file: 'app/build/outputs/dexcount/debug/summary.csv', displayTableFlag: false, inclusionFlag: 'OFF']],
                         group: 'Android',
-                        title: 'Dex CountPlot',
+                        title: 'Dex Count',
                         style: 'line'
 
-                sh 'printf "size\\n$(stat --format=%s app/build/outputs/aar/app-debug.aar)" >> app/build/appsize.csv'
+                sh 'mv app/build/outputs/aar/app-debug.aar .'
+                sh 'chown 1000:1000 app-debug.aar'
+                script {
+                    def file = new File("app-debug.aar")
+                    def sizeMB = file.length() / 10**5
+                    def df = new DecimalFormat("#.##");
+                    def formatted = df.format(sizeMB)
+                    printf(formatted)
+                    def appsizeCsv = new File("appsize.csv")
+                    appsizeCsv.append("size")
+                    appsizeCsv.append("\n")
+                    appsizeCsv.append(formatted)
+                }
+                sh 'ls -la'
+                sh 'rm app-debug.aar'
+                sh 'chown 1000:1000 appsize.csv'
+                sh 'chmod 777 appsize.csv'
                 plot csvFileName: 'plot-8e54e334-ab7b-4c9f-94f7-48484848.csv',
-                        csvSeries: [[file: 'app/build/appsize.csv', displayTableFlag: false, inclusionFlag: 'OFF']],
+                        csvSeries: [[file: 'appsize.csv', displayTableFlag: false, inclusionFlag: 'OFF']],
                         group: 'Android',
                         title: 'AAR File size in bytes',
                         style: 'line'
