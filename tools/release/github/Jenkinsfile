@@ -9,7 +9,15 @@ pipeline {
     stages {
         stage('Create tag') {
             steps {
-                sh "tools/release/github/tag.sh ${params.version}"
+                withCredentials([
+                        usernamePassword(
+                                credentialsId: githubCredentialsAccessToken,
+                                usernameVariable: 'GIT_USERNAME',
+                                passwordVariable: 'GIT_PASSWORD'
+                        )]
+                ) {
+                    sh "tools/release/github/tag.sh $GIT_USERNAME $GIT_PASSWORD $params.version"
+                }
             }
         }
     }
