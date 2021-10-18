@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Create tag') {
             steps {
-                //todo run script with ${params.version}
+                sh "Echo i am working, param ${params.version}"
             }
         }
     }
