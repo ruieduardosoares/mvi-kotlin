@@ -1,0 +1,16 @@
+pipeline {
+    agent any
+    options {
+        skipStagesAfterUnstable()
+    }
+    parameters {
+        string(name: 'version', defaultValue: '', description: 'Tag version, eg v0.1.0')
+    }
+    stages {
+        stage('Create tag') {
+            steps {
+                //todo run script with ${params.version}
+            }
+        }
+    }
+}
