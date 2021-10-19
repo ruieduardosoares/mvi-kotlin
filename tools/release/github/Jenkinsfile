@@ -11,7 +11,7 @@ pipeline {
         TARGET_BRANCH = "${params.targetBranch}"
     }
     stages {
-        stage('Create tag') {
+        stage('Create Tag & Release') {
             steps {
                 withCredentials([
                         usernamePassword(
