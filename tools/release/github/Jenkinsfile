@@ -12,12 +12,6 @@ pipeline {
     }
     stages {
         stage('Create tag') {
-            input {
-                message "Provide some description for the release"
-                parameters {
-                    text(name: 'RELEASE_DESCRIPTION', defaultValue: '', description: 'Write some release details')
-                }
-            }
             steps {
                 withCredentials([
                         usernamePassword(
@@ -27,7 +21,7 @@ pipeline {
                         )]
                 ) {
                     sh "tools/release/github/tag.sh $GIT_USERNAME $GIT_PASSWORD ${params.version}"
-                    sh "tools/release/github/release.sh $GIT_USERNAME $GIT_PASSWORD ${params.version} $RELEASE_DESCRIPTION"
+                    sh "tools/release/github/release.sh $GIT_USERNAME $GIT_PASSWORD ${params.version}"
                 }
             }
         }
