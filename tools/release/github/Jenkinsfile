@@ -5,6 +5,10 @@ pipeline {
     }
     parameters {
         string(name: 'version', defaultValue: '', description: 'Tag version, eg v0.1.0')
+        string(name: 'targetBranch', defaultValue: 'main', description: 'Branch from which tag is created, eg release/0.1.0')
+    }
+    environment {
+        TARGET_BRANCH = "${params.targetBranch}"
     }
     stages {
         stage('Create tag') {
@@ -16,7 +20,8 @@ pipeline {
                                 passwordVariable: 'GIT_PASSWORD'
                         )]
                 ) {
-                    sh "tools/release/github/tag.sh $GIT_USERNAME $GIT_PASSWORD ${params.version}"
+                    //TODO uncomment this after test of environment variable
+//                    sh "tools/release/github/tag.sh $GIT_USERNAME $GIT_PASSWORD ${params.version}"
                 }
             }
         }
