@@ -11,12 +11,12 @@ pipeline {
             steps {
                 withCredentials([
                         usernamePassword(
-                                credentialsId: githubCredentialsAccessToken,
+                                credentialsId: 'githubCredentialsAccessToken',
                                 usernameVariable: 'GIT_USERNAME',
                                 passwordVariable: 'GIT_PASSWORD'
                         )]
                 ) {
-                    sh "tools/release/github/tag.sh $GIT_USERNAME $GIT_PASSWORD $params.version"
+                    sh "tools/release/github/tag.sh $GIT_USERNAME $GIT_PASSWORD ${params.version}"
                 }
             }
         }

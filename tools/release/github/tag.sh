@@ -9,4 +9,4 @@ if [ "$?" -ne "0" ]; then
 else
   echo "Tag $version created successfully for commit $(git rev-parse --short HEAD~2)"
 fi
-git push origin https://"$accessToken"@github.com/"$username"/mvi-kotlin.git "$version"
+git push https://"$username":"$accessToken"@github.com/"$username"/mvi-kotlin.git "$version"
