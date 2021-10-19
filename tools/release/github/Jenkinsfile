@@ -20,8 +20,7 @@ pipeline {
                                 passwordVariable: 'GIT_PASSWORD'
                         )]
                 ) {
-                    //TODO uncomment this after test of environment variable
-//                    sh "tools/release/github/tag.sh $GIT_USERNAME $GIT_PASSWORD ${params.version}"
+                    sh "tools/release/github/tag.sh $GIT_USERNAME $GIT_PASSWORD ${params.version}"
                 }
             }
         }
