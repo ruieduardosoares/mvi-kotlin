@@ -21,6 +21,7 @@ pipeline {
                         )]
                 ) {
                     sh "tools/release/github/tag.sh $GIT_USERNAME $GIT_PASSWORD ${params.version}"
+                    sh "tools/release/github/release.sh $GIT_USERNAME $GIT_PASSWORD ${params.version}"
                 }
             }
         }
