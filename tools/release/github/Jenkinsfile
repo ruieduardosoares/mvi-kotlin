@@ -15,7 +15,7 @@ pipeline {
             input {
                 message "Provide some description for the release"
                 parameters {
-                    string(name: 'RELEASE_DESCRIPTION', defaultValue: '', description: 'Write some release details')
+                    text(name: 'RELEASE_DESCRIPTION', defaultValue: '', description: 'Write some release details')
                 }
             }
             steps {
