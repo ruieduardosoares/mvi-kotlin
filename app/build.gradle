@@ -3,7 +3,7 @@ plugins {
     id "kotlin-android"
     id "kotlin-kapt"
 }
-
+apply from: "$project.rootDir/config/publication/mavenPublish.gradle"
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
@@ -29,6 +29,16 @@ android {
 
     kotlinOptions {
         jvmTarget = rootProject.ext.kotlinJvmTarget
+    }
+
+    buildTypes {
+        debug {
+            debuggable true
+        }
+
+        release {
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
     }
 
     lintOptions {
