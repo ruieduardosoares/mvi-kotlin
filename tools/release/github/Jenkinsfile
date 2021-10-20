@@ -1,0 +1,29 @@
+pipeline {
+    agent any
+    options {
+        skipStagesAfterUnstable()
+    }
+    parameters {
+        string(name: 'version', defaultValue: '', description: 'Tag version, eg v0.1.0')
+        string(name: 'targetBranch', defaultValue: 'main', description: 'Branch from which tag is created, eg release/0.1.0')
+    }
+    environment {
+        TARGET_BRANCH = "${params.targetBranch}"
+    }
+    stages {
+        stage('Create Tag & Release') {
+            steps {
+                withCredentials([
+                        usernamePassword(
+                                credentialsId: 'githubCredentialsAccessToken',
+                                usernameVariable: 'GIT_USERNAME',
+                                passwordVariable: 'GIT_PASSWORD'
+                        )]
+                ) {
+                    sh "tools/release/github/tag.sh $GIT_USERNAME $GIT_PASSWORD ${params.version}"
+                    sh "tools/release/github/release.sh $GIT_USERNAME $GIT_PASSWORD ${params.version}"
+                }
+            }
+        }
+    }
+}
