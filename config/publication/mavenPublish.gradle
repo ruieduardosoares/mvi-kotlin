@@ -1,19 +1,43 @@
-//https://developer.android.com/studio/build/maven-publish-plugin
 apply plugin: "maven-publish"
 // Because the components are created only during the afterEvaluate phase, you must
 // configure your publications using the afterEvaluate() lifecycle method.
 afterEvaluate {
     publishing {
         publications {
-            // Creates a Maven publication called “debug”.
-            debug(MavenPublication) {
-                // Applies the component for the debug build variant.
-                from components.debug
-            }
-            // Creates a Maven publication called "release".
-            release(MavenPublication) {
-                // Applies the component for the release build variant.
+            aar(MavenPublication) {
+                //Component is release type
                 from components.release
+
+                //Coordinates
+                groupId = "io.github.ruieduardosoares"
+                artifactId = "android-mvi-kotlin"
+                version = rootProject.ext.versionName
+
+                //POM mandatory configurations to publish to https://central.sonatype.org
+                pom {
+                    name = "$groupId:$artifactId"
+                    description = "Modern Android Mvi kotlin library"
+                    url = "https://github.com/ruieduardosoares/mvi-kotlin"
+                    licenses {
+                        license {
+                            name = "MIT License"
+                            url = "http://www.opensource.org/licenses/mit-license.php"
+                        }
+                    }
+                    developers {
+                        developer {
+                            name = "Rui Soares"
+                            email = "rui_eduardo93@hotmail.com"
+                            organization = "None"
+                            organizationUrl = "https://github.com/ruieduardosoares"
+                        }
+                    }
+                    scm {
+                        connection = "scm:git:git://github.com/ruieduardosoares/mvi-kotlin.git"
+                        developerConnection = "scm:git:ssh://github.com:ruieduardosoares/mvi-kotlin.git"
+                        url = "https://github.com/ruieduardosoares/mvi-kotlin/tree/main"
+                    }
+                }
             }
         }
     }
