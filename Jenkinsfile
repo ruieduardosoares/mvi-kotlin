@@ -42,7 +42,7 @@ pipeline {
                           minimumMethodCoverage     : '76',
                           execPattern               : '**/build/jacoco/*.exec',
                           classPattern              : '**/build/tmp/kotlin-classes',
-                          sourcePattern             : 'src/main/java',
+                          sourcePattern             : 'src/main/kotlin',
                           exclusionPattern          : 'src/test/**'])
                 }
             }
