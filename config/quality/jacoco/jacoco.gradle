@@ -36,7 +36,7 @@ task jacocoTestReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
                       '**/*$Parcelable*.*',
                       '**/*DaggerApplicationComponent*.class']
     def debugTree = fileTree(dir: "${buildDir}/tmp/kotlin-classes/debug", excludes: fileFilter)
-    def mainSrc = "${project.projectDir}/src/main/java"
+    def mainSrc = "${project.projectDir}/src/main/kotlin"
     sourceDirectories.from = files([mainSrc])
     classDirectories.from = files([debugTree])
     executionData.from = files("${buildDir}/jacoco/testDebugUnitTest.exec")
