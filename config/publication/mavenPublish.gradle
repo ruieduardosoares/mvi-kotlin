@@ -1,13 +1,40 @@
 apply plugin: "maven-publish"
 apply plugin: "org.jetbrains.dokka"
+apply plugin: "signing"
 // Because the components are created only during the afterEvaluate phase, you must
 // configure your publications using the afterEvaluate() lifecycle method.
 afterEvaluate {
+    task javadocJar(type: Jar, dependsOn: dokkaJavadoc) {
+        group("documentation")
+        getArchiveClassifier().set("javadoc")
+        from "$project.buildDir/dokka/javadoc"
+    }
+
+    task sourcesJar(type: Jar) {
+        group("documentation")
+        getArchiveClassifier().set("sources")
+        def androidMainSourceSets = android.sourceSets.main
+        def kotlinSrcSet = androidMainSourceSets.java.srcDirs
+        def resSrcSet = androidMainSourceSets.res.srcDirs
+        def manifestSrcFile = androidMainSourceSets.manifest.srcFile
+        from(kotlinSrcSet, resSrcSet, manifestSrcFile)
+    }
+
+    artifacts {
+        archives javadocJar, sourcesJar
+    }
+
+    assembleRelease.dependsOn javadocJar, sourcesJar
+
     publishing {
         publications {
-            aar(MavenPublication) {
-                //Component is release type
+            release(MavenPublication) {
+                //Component is release type aar file
                 from components.release
+
+                // add javadoc and sources jar to publication
+                artifact javadocJar
+                artifact sourcesJar
 
                 //Coordinates
                 groupId = "io.github.ruieduardosoares"
@@ -42,22 +69,8 @@ afterEvaluate {
             }
         }
     }
-    task javadocJar(type: Jar, dependsOn: dokkaJavadoc) {
-        group("documentation")
-        getArchiveClassifier().set("javadoc")
-        from "$project.buildDir/dokka/javadoc"
+
+    signing {
+        sign publishing.publications.release
     }
-    task sourcesJar(type: Jar) {
-        group("documentation")
-        getArchiveClassifier().set("sources")
-        def androidMainSourceSets = android.sourceSets.main
-        def kotlinSrcSet = androidMainSourceSets.java.srcDirs
-        def resSrcSet = androidMainSourceSets.res.srcDirs
-        def manifestSrcFile = androidMainSourceSets.manifest.srcFile
-        from(kotlinSrcSet, resSrcSet, manifestSrcFile)
-    }
-    artifacts {
-        archives javadocJar, sourcesJar
-    }
-    assembleRelease.dependsOn javadocJar, sourcesJar
 }
