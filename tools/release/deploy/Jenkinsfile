@@ -1,0 +1,48 @@
+pipeline {
+    agent {
+        dockerfile {
+            filename 'Dockerfile'
+            dir 'tools/dockers/android-sdk'
+            args '-u root:root' //todo here because gradlew needs to access root folder /opt
+        }
+    }
+    options {
+        skipStagesAfterUnstable()
+    }
+    parameters {
+        string(name: 'tag', defaultValue: 'main', description: 'Tag from which we run the Jenkinsfile of deploy, eg v0.1.0')
+    }
+    environment {
+        TARGET_BRANCH = "${params.tag}"
+    }
+    stages {
+        stage('Assemble') {
+            steps {
+                sh './gradlew assembleRelease'
+            }
+        }
+        stage('Sign') {
+            steps {
+                withCredentials([
+                        file(credentialsId: 'mviKotlinGpgSecretRingFile', variable: 'FILE'),
+                        vaultString(credentialsId: 'mviKotlinGpgSecretId', variable: 'SECRET_ID'),
+                        vaultString(credentialsId: 'mviKotlinGpgSecretPassword', variable: 'SECRET_PASS')
+                ]) {
+                    sh "./gradlew app:signReleasePublication -Psigning.secretKeyRingFile=$FILE -Psigning.password=$SECRET_PASS -Psigning.keyId=$SECRET_ID"
+                }
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sh 'echo deploying...'
+            }
+        }
+    }
+    post {
+        //Here because we are overriding jenkins user with container root user
+        //Always cleanup at the end regardless of pipeline status
+        always {
+            sh 'rm -R .gradle/ build app/build'
+        }
+    }
+}
