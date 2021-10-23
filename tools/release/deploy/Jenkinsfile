@@ -25,8 +25,8 @@ pipeline {
             steps {
                 withCredentials([
                         file(credentialsId: 'mviKotlinGpgSecretRingFile', variable: 'FILE'),
-                        vaultString(credentialsId: 'mviKotlinGpgSecretId', variable: 'SECRET_ID'),
-                        vaultString(credentialsId: 'mviKotlinGpgSecretPassword', variable: 'SECRET_PASS')
+                        string(credentialsId: 'mviKotlinGpgSecretId', variable: 'SECRET_ID'),
+                        string(credentialsId: 'mviKotlinGpgSecretPassword', variable: 'SECRET_PASS')
                 ]) {
                     //todo change to app:publish once all maven configurations are done
                     sh "./gradlew app:publishReleasePublicationToMavenLocal -Psigning.secretKeyRingFile=$FILE -Psigning.password=$SECRET_PASS -Psigning.keyId=$SECRET_ID"
