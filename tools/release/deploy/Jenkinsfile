@@ -21,7 +21,7 @@ pipeline {
                 sh './gradlew assembleRelease'
             }
         }
-        stage('Publish') {
+        stage('Deploy') {
             steps {
                 withCredentials([
                         file(credentialsId: 'mviKotlinGpgSecretRingFile', variable: 'FILE'),
