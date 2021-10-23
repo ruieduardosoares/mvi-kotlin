@@ -10,10 +10,7 @@ pipeline {
         skipStagesAfterUnstable()
     }
     parameters {
-        string(name: 'tag', defaultValue: 'main', description: 'Tag from which we run the Jenkinsfile of deploy, eg v0.1.0')
-    }
-    environment {
-        TARGET_BRANCH = "${params.tag}"
+        gitParameter defaultValue: 'main', description: 'Tag to deploy, eg v0.1.0', name: 'TARGET_TAG', type: 'PT_TAG'
     }
     stages {
         stage('Assemble') {
