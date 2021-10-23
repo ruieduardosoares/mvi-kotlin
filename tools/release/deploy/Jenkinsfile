@@ -33,11 +33,6 @@ pipeline {
                 }
             }
         }
-        stage('Deploy') {
-            steps {
-                sh 'echo deploying...'
-            }
-        }
     }
     post {
         //Here because we are overriding jenkins user with container root user
