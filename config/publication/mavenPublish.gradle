@@ -69,7 +69,19 @@ afterEvaluate {
             }
         }
     }
-
+    repositories {
+        maven {
+            def releasesRepoUrl = 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/'
+            def snapshotsRepoUrl = 'https://s01.oss.sonatype.org/content/repositories/snapshots/'
+            url = project.hasProperty('release') ? releasesRepoUrl : snapshotsRepoUrl
+            name = 'Sonatype nexus repository'
+            credentials {
+                def properties = project.getProperties()
+                username = properties.get('ossrhUsername')
+                password = properties.get('ossrhPassword')
+            }
+        }
+    }
     signing {
         sign publishing.publications.release
     }
