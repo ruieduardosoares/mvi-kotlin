@@ -11,6 +11,7 @@ pipeline {
     }
     parameters {
         gitParameter defaultValue: 'main', description: 'Tag to deploy, eg v0.1.0', name: 'TARGET_TAG', type: 'PT_TAG'
+        choice(name: 'RELEASE_TYPE', choices: ['snapshot', 'release'], description: 'Release type')
     }
     stages {
         stage('Assemble') {
@@ -23,10 +24,14 @@ pipeline {
                 withCredentials([
                         file(credentialsId: 'mviKotlinGpgSecretRingFile', variable: 'FILE'),
                         string(credentialsId: 'mviKotlinGpgSecretId', variable: 'SECRET_ID'),
-                        string(credentialsId: 'mviKotlinGpgSecretPassword', variable: 'SECRET_PASS')
+                        string(credentialsId: 'mviKotlinGpgSecretPassword', variable: 'SECRET_PASS'),
+                        usernamePassword(
+                                credentialsId: 'sonatypeNexusCredentials',
+                                usernameVariable: 'NEXUS_USERNAME',
+                                passwordVariable: 'NEXUS_PASSWORD'
+                        )
                 ]) {
-                    //todo change to app:publish once all maven configurations are done
-                    sh "./gradlew app:publishReleasePublicationToMavenLocal -Psigning.secretKeyRingFile=$FILE -Psigning.password=$SECRET_PASS -Psigning.keyId=$SECRET_ID"
+                    sh "./gradlew app:publish -P$RELEASE_TYPE -PossrhUsername=$NEXUS_USERNAME -PossrhPassword=$NEXUS_PASSWORD -Psigning.secretKeyRingFile=$FILE -Psigning.password=$SECRET_PASS -Psigning.keyId=$SECRET_ID"
                 }
             }
         }
