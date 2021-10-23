@@ -21,14 +21,15 @@ pipeline {
                 sh './gradlew assembleRelease'
             }
         }
-        stage('Sign') {
+        stage('Publish') {
             steps {
                 withCredentials([
                         file(credentialsId: 'mviKotlinGpgSecretRingFile', variable: 'FILE'),
                         vaultString(credentialsId: 'mviKotlinGpgSecretId', variable: 'SECRET_ID'),
                         vaultString(credentialsId: 'mviKotlinGpgSecretPassword', variable: 'SECRET_PASS')
                 ]) {
-                    sh "./gradlew app:signReleasePublication -Psigning.secretKeyRingFile=$FILE -Psigning.password=$SECRET_PASS -Psigning.keyId=$SECRET_ID"
+                    //todo change to app:publish once all maven configurations are done
+                    sh "./gradlew app:publishReleasePublicationToMavenLocal -Psigning.secretKeyRingFile=$FILE -Psigning.password=$SECRET_PASS -Psigning.keyId=$SECRET_ID"
                 }
             }
         }
