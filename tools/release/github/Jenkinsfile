@@ -5,10 +5,7 @@ pipeline {
     }
     parameters {
         string(name: 'version', defaultValue: '', description: 'Tag version, eg v0.1.0')
-        string(name: 'targetBranch', defaultValue: 'main', description: 'Branch from which tag is created, eg release/0.1.0')
-    }
-    environment {
-        TARGET_BRANCH = "${params.targetBranch}"
+        gitParameter branchFilter: 'origin/(.*)', defaultValue: 'main', description: 'Branch from which tag is created, eg release/0.1.0', name: 'TARGET_BRANCH', type: 'PT_BRANCH'
     }
     stages {
         stage('Create Tag & Release') {
