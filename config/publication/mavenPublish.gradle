@@ -39,7 +39,11 @@ afterEvaluate {
                 //Coordinates
                 groupId = "io.github.ruieduardosoares"
                 artifactId = "android-mvi-kotlin"
-                version = rootProject.ext.versionName
+                if (project.hasProperty('release')) {
+                    version = rootProject.ext.versionName
+                } else {
+                    version = "$rootProject.ext.versionName-SNAPSHOT"
+                }
 
                 //POM mandatory configurations to publish to https://central.sonatype.org
                 pom {
@@ -68,17 +72,16 @@ afterEvaluate {
                 }
             }
         }
-    }
-    repositories {
-        maven {
-            def releasesRepoUrl = 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/'
-            def snapshotsRepoUrl = 'https://s01.oss.sonatype.org/content/repositories/snapshots/'
-            url = project.hasProperty('release') ? releasesRepoUrl : snapshotsRepoUrl
-            name = 'Sonatype nexus repository'
-            credentials {
-                def properties = project.getProperties()
-                username = properties.get('ossrhUsername')
-                password = properties.get('ossrhPassword')
+        repositories {
+            maven {
+                def releasesRepoUrl = 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/'
+                def snapshotsRepoUrl = 'https://s01.oss.sonatype.org/content/repositories/snapshots/'
+                url = project.hasProperty('release') ? releasesRepoUrl : snapshotsRepoUrl
+                credentials {
+                    def properties = project.getProperties()
+                    username = properties.get('ossrhUsername')
+                    password = properties.get('ossrhPassword')
+                }
             }
         }
     }

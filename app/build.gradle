@@ -5,6 +5,7 @@ plugins {
 }
 apply from: "$project.rootDir/config/publication/mavenPublish.gradle"
 android {
+    namespace rootProject.ext.namespace
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
 
@@ -32,9 +33,7 @@ android {
     }
 
     buildTypes {
-        release {
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
+        release
     }
 
     lintOptions {
