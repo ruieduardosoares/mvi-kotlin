@@ -4,7 +4,7 @@ ext {
     // Config shared to all modules
     compileSdkVersion = 30
     buildToolsVersion = "30.0.2"
-    applicationId = "com.mvi.kotlin"
+    namespace = "io.github.ruieduardosoares.android.mvi.kotlin"
     minSdkVersion = 21
     targetSdkVersion = 30
     versionName = androidAutoVersion.versionName
