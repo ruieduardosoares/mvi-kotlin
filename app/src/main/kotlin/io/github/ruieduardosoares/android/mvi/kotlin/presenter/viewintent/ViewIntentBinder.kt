@@ -15,5 +15,11 @@ import io.reactivex.rxjava3.core.Observable
  */
 fun interface ViewIntentBinder<V : MviView<*>, T : Any> {
 
+    /**
+     * Binds the view intent method of the view
+     *
+     * @param view the MviView type from which we call the respective view "intent method"
+     * @return an Observable of the given view "intent method" supported data type
+     */
     fun bind(view: V): Observable<T>
 }
