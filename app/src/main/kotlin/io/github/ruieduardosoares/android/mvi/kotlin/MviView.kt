@@ -25,6 +25,8 @@ import androidx.annotation.MainThread
  * Activity view for example.
  *
  * Remember that the Activity/Fragment are not your view, but rather a container for your it
+ *
+ * @param T is the ViewState class
  */
 @MainThread
 interface MviView<T> {
