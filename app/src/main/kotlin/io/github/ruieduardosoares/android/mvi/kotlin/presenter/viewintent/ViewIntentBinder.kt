@@ -4,7 +4,7 @@ import io.github.ruieduardosoares.android.mvi.kotlin.MviView
 import io.reactivex.rxjava3.core.Observable
 
 /**
- * This interface is responsible for binding the MviView declared "intent method" with the view pipeline
+ * This interface is responsible for binding the MviView declared "intent method" with the view state stream
  *
  * This is tightly used with [IntentCreator].
  *

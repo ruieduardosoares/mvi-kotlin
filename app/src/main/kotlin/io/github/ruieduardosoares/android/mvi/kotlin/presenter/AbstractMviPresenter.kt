@@ -5,7 +5,6 @@ import io.github.ruieduardosoares.android.mvi.kotlin.MviView
 import io.github.ruieduardosoares.android.mvi.kotlin.presenter.viewintent.IntentCreator
 import io.reactivex.rxjava3.core.Observable
 
-
 /**
  * Abstract mvi presenter, this is the base presenter class you must extend in order to be
  * compliant with the established MVI contract.

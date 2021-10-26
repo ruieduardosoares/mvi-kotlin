@@ -8,7 +8,7 @@ import io.reactivex.rxjava3.core.Observable
  * Implementation details can be seen on [IntentCreatorImpl]
  *
  * An implementation instance of this class is provided in [AbstractMviPresenter][io.github.ruieduardosoares.android.mvi.kotlin.presenter.AbstractMviPresenter]
- * in order to compose the view pipeline
+ * in order to build the view state stream
  *
  * @param V is the type of MviView that
  * @constructor Create empty Intent creator
@@ -16,7 +16,7 @@ import io.reactivex.rxjava3.core.Observable
 interface IntentCreator<V : MviView<*>> {
 
     /**
-     * Creates the pipeline intent based on the given [viewIntentBinder]
+     * Creates the intent stream based on the given [viewIntentBinder]
      *
      * @param I the type of the intent from the "view intent" method
      * @param viewIntentBinder the binder which contains the intent of the view

@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import io.github.ruieduardosoares.android.mvi.kotlin.MviView
 import io.github.ruieduardosoares.android.mvi.kotlin.presenter.AbstractMviPresenter
 
-
 /**
  * Mvi container activity that merely acts as a container for the view and the presenter.
  * This container shouldn't be your view implementation but rather a container for your view.
