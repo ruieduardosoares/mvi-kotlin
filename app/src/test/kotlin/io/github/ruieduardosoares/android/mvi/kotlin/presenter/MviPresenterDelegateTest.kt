@@ -85,8 +85,8 @@ internal class MviPresenterDelegateTest {
 
         //Given
         mPresenterDelegate.attachView(mView, mAbstractMviPresenter)
-        mPresenterDelegate.detachView(false, mAbstractMviPresenter)
-        mPresenterDelegate.destroy(mAbstractMviPresenter)
+        mPresenterDelegate.detachView()
+        mPresenterDelegate.destroy()
         clearInvocations(mAbstractMviPresenter, mStateRelayToViewRenderBinder, mViewIntentsBinder)
 
         //When
@@ -105,7 +105,7 @@ internal class MviPresenterDelegateTest {
 
         //Given
         mPresenterDelegate.attachView(mView, mAbstractMviPresenter)
-        mPresenterDelegate.detachView(false, mAbstractMviPresenter)
+        mPresenterDelegate.detachView()
         clearInvocations(mAbstractMviPresenter, mStateRelayToViewRenderBinder, mViewIntentsBinder)
 
         //When
@@ -136,7 +136,7 @@ internal class MviPresenterDelegateTest {
 
         //Given
         mPresenterDelegate.attachView(mView, mAbstractMviPresenter)
-        mPresenterDelegate.detachView(false, mAbstractMviPresenter)
+        mPresenterDelegate.detachView()
         clearInvocations(mAbstractMviPresenter, mStateRelayToViewRenderBinder, mViewIntentsBinder)
 
         //When
@@ -152,7 +152,7 @@ internal class MviPresenterDelegateTest {
     internal fun detachView_whenNotAttached_thenDoNothing() {
 
         //When
-        mPresenterDelegate.detachView(false, mAbstractMviPresenter)
+        mPresenterDelegate.detachView()
 
         //Then
         verifyZeroInteractions(
@@ -167,12 +167,12 @@ internal class MviPresenterDelegateTest {
 
         //Given
         mPresenterDelegate.attachView(mView, mAbstractMviPresenter)
-        mPresenterDelegate.detachView(true, mAbstractMviPresenter)
-        mPresenterDelegate.destroy(mAbstractMviPresenter)
+        mPresenterDelegate.detachView()
+        mPresenterDelegate.destroy()
         clearInvocations(mAbstractMviPresenter, mStateRelayToViewRenderBinder, mViewIntentsBinder)
 
         //When
-        mPresenterDelegate.detachView(false, mAbstractMviPresenter)
+        mPresenterDelegate.detachView()
 
         //Then
         verifyZeroInteractions(
@@ -183,32 +183,14 @@ internal class MviPresenterDelegateTest {
     }
 
     @Test
-    internal fun detachView_whenViewPermanentlyDetached_thenUnbindPresenterIntentsAndDisposeViewFromComponents() {
+    internal fun detachView_thenDisposeViewFromComponents() {
 
         //Given
         mPresenterDelegate.attachView(mView, mAbstractMviPresenter)
         clearInvocations(mAbstractMviPresenter, mStateRelayToViewRenderBinder, mViewIntentsBinder)
-        val isViewPermanentlyDetached = true
 
         //When
-        mPresenterDelegate.detachView(isViewPermanentlyDetached, mAbstractMviPresenter)
-
-        //Then
-        verify(mStateRelayToViewRenderBinder, only()).dispose()
-        verify(mViewIntentsBinder, only()).unbind()
-        verify(mAbstractMviPresenter, only()).unbindIntents()
-    }
-
-    @Test
-    internal fun detachView_whenViewNotPermanentlyDetached_thenDisposeViewFromComponentsOnly() {
-
-        //Given
-        mPresenterDelegate.attachView(mView, mAbstractMviPresenter)
-        clearInvocations(mAbstractMviPresenter, mStateRelayToViewRenderBinder, mViewIntentsBinder)
-        val isViewPermanentlyDetached = false
-
-        //When
-        mPresenterDelegate.detachView(isViewPermanentlyDetached, mAbstractMviPresenter)
+        mPresenterDelegate.detachView()
 
         //Then
         verify(mStateRelayToViewRenderBinder, only()).dispose()
@@ -221,12 +203,12 @@ internal class MviPresenterDelegateTest {
 
         //Given
         mPresenterDelegate.attachView(mView, mAbstractMviPresenter)
-        mPresenterDelegate.detachView(true, mAbstractMviPresenter)
-        mPresenterDelegate.destroy(mAbstractMviPresenter)
+        mPresenterDelegate.detachView()
+        mPresenterDelegate.destroy()
         clearInvocations(mAbstractMviPresenter, mStateRelayToViewRenderBinder, mViewIntentsBinder)
 
         //When
-        mPresenterDelegate.destroy(mAbstractMviPresenter)
+        mPresenterDelegate.destroy()
 
         //Then
         verifyZeroInteractions(
@@ -249,12 +231,11 @@ internal class MviPresenterDelegateTest {
         )
 
         //When
-        mPresenterDelegate.destroy(mAbstractMviPresenter)
+        mPresenterDelegate.destroy()
 
         //Then
         verify(mStateRelayToViewRenderBinder, only()).dispose()
         verify(mViewIntentsBinder).unbind()
-        verify(mAbstractMviPresenter, only()).unbindIntents()
         verify(mStateStreamToStateRelayBinder, only()).dispose()
         verify(mViewIntentsBinder).destroy()
         verifyNoMoreInteractions(mViewIntentsBinder)
@@ -265,7 +246,7 @@ internal class MviPresenterDelegateTest {
 
         //Given
         mPresenterDelegate.attachView(mView, mAbstractMviPresenter)
-        mPresenterDelegate.detachView(true, mAbstractMviPresenter)
+        mPresenterDelegate.detachView()
         clearInvocations(
             mAbstractMviPresenter,
             mStateRelayToViewRenderBinder,
@@ -274,7 +255,7 @@ internal class MviPresenterDelegateTest {
         )
 
         //When
-        mPresenterDelegate.destroy(mAbstractMviPresenter)
+        mPresenterDelegate.destroy()
 
         //Then
         verify(mStateStreamToStateRelayBinder, only()).dispose()

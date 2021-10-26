@@ -38,7 +38,7 @@ internal class MviContainerActivityDelegate<S : Any, V : MviView<S>>(
     fun onStop() {
         mMviPresenter?.let { presenter ->
             val isChangingConfigurations = mMviContainerActivity.isChangingConfigurations
-            presenter.detachView(isChangingConfigurations.not())
+            presenter.detachView()
             if (isChangingConfigurations) {
                 mLazyMviPresenterMemento.value.keep(presenter)
             }

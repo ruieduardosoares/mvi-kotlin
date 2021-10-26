@@ -6,9 +6,7 @@ import io.reactivex.rxjava3.exceptions.CompositeException
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.plugins.RxJavaPlugins
 import org.amshove.kluent.shouldBeEqualTo
-import org.amshove.kluent.shouldBeFalse
 import org.amshove.kluent.shouldBeInstanceOf
-import org.amshove.kluent.shouldBeTrue
 import org.amshove.kluent.shouldNotBeNull
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -49,7 +47,6 @@ internal class MviPresenterIntegrationsTest {
     internal fun attachView_whenAttachDetachAttach_thenBindIntentsOnlyCalledOnce() {
 
         //Given
-        val isViewPermanentlyDetached = false
         var bindIntentsCounter = 0
         val view = object : TestView {
             override fun testIntentOne(): Observable<Unit> = Observable.just(Unit)
@@ -64,7 +61,7 @@ internal class MviPresenterIntegrationsTest {
 
         //When
         mviPresenter.attachView(view)
-        mviPresenter.detachView(isViewPermanentlyDetached)
+        mviPresenter.detachView()
         mviPresenter.attachView(view)
 
         //Then
@@ -103,7 +100,6 @@ internal class MviPresenterIntegrationsTest {
         val firstValue = 1
         val lastValue = 85
         var lastRenderedValue = 0
-        val isViewPermanentlyDetached = false
         val view = object : TestView {
             override fun testIntentOne(): Observable<Unit> = Observable.just(Unit)
             override fun render(state: Int) {
@@ -120,13 +116,13 @@ internal class MviPresenterIntegrationsTest {
 
         //When
         mviPresenter.attachView(view)
-        mviPresenter.detachView(isViewPermanentlyDetached)
+        mviPresenter.detachView()
         mviPresenter.attachView(view)
-        mviPresenter.detachView(isViewPermanentlyDetached)
+        mviPresenter.detachView()
         mviPresenter.attachView(view)
-        mviPresenter.detachView(isViewPermanentlyDetached)
+        mviPresenter.detachView()
         mviPresenter.attachView(view)
-        mviPresenter.detachView(isViewPermanentlyDetached)
+        mviPresenter.detachView()
 
         //Then
         lastRenderedValue.shouldBeEqualTo(lastValue)
@@ -170,90 +166,5 @@ internal class MviPresenterIntegrationsTest {
         secondCause.shouldNotBeNull()
         secondCause.shouldBeInstanceOf<IllegalStateException>()
         secondCause.message.shouldBeEqualTo("Error must not reach view but rather handled into a proper error state.")
-    }
-
-    @Test
-    internal fun detachView_whenViewPermanentlyDetached_thenUnbindIntents() {
-
-        //Given
-        val isViewPermanentlyDetached = true
-        var unbindIntentsCalled = false
-        val view = object : TestView {
-            override fun testIntentOne(): Observable<Unit> = Observable.just(Unit)
-            override fun render(state: Int) {}
-        }
-        val mviPresenter = object : AbstractMviPresenter<Int, TestView>() {
-            override fun bindIntents(): Observable<Int> {
-                return Observable.empty()
-            }
-
-            override fun unbindIntents() {
-                unbindIntentsCalled = true
-            }
-        }
-        mviPresenter.attachView(view)
-
-        //When
-        mviPresenter.detachView(isViewPermanentlyDetached)
-
-        //Then
-        unbindIntentsCalled.shouldBeTrue()
-    }
-
-    @Test
-    internal fun detachView_whenViewNotPermanentlyDetached_thenDontUnbindIntents() {
-
-        //Given
-        val isViewPermanentlyDetached = false
-        var unbindIntentsCalled = false
-        val view = object : TestView {
-            override fun testIntentOne(): Observable<Unit> = Observable.just(Unit)
-            override fun render(state: Int) {}
-        }
-        val mviPresenter = object : AbstractMviPresenter<Int, TestView>() {
-            override fun bindIntents(): Observable<Int> {
-                return Observable.empty()
-            }
-
-            override fun unbindIntents() {
-                unbindIntentsCalled = true
-            }
-        }
-        mviPresenter.attachView(view)
-
-        //When
-        mviPresenter.detachView(isViewPermanentlyDetached)
-
-        //Then
-        unbindIntentsCalled.shouldBeFalse()
-    }
-
-    @Test
-    internal fun destroy_thenDontUnbindIntents() {
-
-        //Given
-        val isViewPermanentlyDetached = true
-        var unbindIntentsCalled = false
-        val view = object : TestView {
-            override fun testIntentOne(): Observable<Unit> = Observable.just(Unit)
-            override fun render(state: Int) {}
-        }
-        val mviPresenter = object : AbstractMviPresenter<Int, TestView>() {
-            override fun bindIntents(): Observable<Int> {
-                return Observable.empty()
-            }
-
-            override fun unbindIntents() {
-                unbindIntentsCalled = true
-            }
-        }
-        mviPresenter.attachView(view)
-        mviPresenter.detachView(isViewPermanentlyDetached)
-
-        //When
-        mviPresenter.destroy()
-
-        //Then
-        unbindIntentsCalled.shouldBeTrue()
     }
 }
