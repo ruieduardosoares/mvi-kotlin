@@ -84,15 +84,17 @@ pipeline {
                         style: 'line'
             }
         }
-        stage("Generate Docs"){
-            sh './gradlew :app:dokkaJavadoc'
-            publishHTML(target: [allowMissing         : false,
-                                 alwaysLinkToLastBuild: true,
-                                 keepAll              : true,
-                                 reportDir            : 'app/build/dokka/javadoc',
-                                 reportFiles          : 'index.html',
-                                 reportName           : 'Kotlin Docs',
-                                 reportTitles         : 'The Report'])
+        stage("Generate Docs") {
+            steps {
+                sh './gradlew :app:dokkaJavadoc'
+                publishHTML(target: [allowMissing         : false,
+                                     alwaysLinkToLastBuild: true,
+                                     keepAll              : true,
+                                     reportDir            : 'app/build/dokka/javadoc',
+                                     reportFiles          : 'index.html',
+                                     reportName           : 'Kotlin Docs',
+                                     reportTitles         : 'The Report'])
+            }
         }
     }
     post {
