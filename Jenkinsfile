@@ -84,12 +84,22 @@ pipeline {
                         style: 'line'
             }
         }
+        stage("Generate Docs"){
+            sh './gradlew :app:dokkaJavadoc'
+            publishHTML(target: [allowMissing         : false,
+                                 alwaysLinkToLastBuild: true,
+                                 keepAll              : true,
+                                 reportDir            : 'app/build/dokka/javadoc',
+                                 reportFiles          : 'index.html',
+                                 reportName           : 'Kotlin Docs',
+                                 reportTitles         : 'The Report'])
+        }
     }
     post {
         //Here because we are overriding jenkins user with container root user
         //Always cleanup at the end regardless of pipeline status
         always {
-            sh 'rm -R .gradle/ build app/build'
+            sh 'rm -R .gradle/ build app/build app/.gradle/'
         }
     }
 }
