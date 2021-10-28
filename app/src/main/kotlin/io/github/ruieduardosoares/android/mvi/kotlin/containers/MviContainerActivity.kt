@@ -11,7 +11,7 @@ import io.github.ruieduardosoares.android.mvi.kotlin.presenter.AbstractMviPresen
  * Mvi container activity that merely acts as a container for the view and the presenter.
  * This container shouldn't be your view implementation but rather a container for your view.
  *
- * Example
+ * Example:
  * ```
  * class SomeViewContainerActivity : MviContainerActivity<SomeViewState, SomeMviView>() {
  *

@@ -24,7 +24,7 @@ import androidx.annotation.MainThread
  * As a final step you would implement this interface in a class that has access to the
  * Activity view for example.
  *
- * Remember that the Activity/Fragment are not your view, but rather a container for your it
+ * Remember that the Activity/Fragment are not your view, but rather a container for your view
  *
  * @param T is the ViewState class
  */
