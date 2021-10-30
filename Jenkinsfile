@@ -3,7 +3,7 @@ pipeline {
         dockerfile {
             filename 'Dockerfile'
             dir 'tools/dockers/android-sdk'
-            args '-u root:root' //todo here because gradlew needs to access root folder /opt
+            args '-u root:root' //here because gradlew needs to access root folder /opt
         }
     }
     options {
@@ -35,11 +35,11 @@ pipeline {
                           buildOverBuild            : true,
                           changeBuildStatus         : true,
                           minimumInstructionCoverage: '86',
-                          minimumBranchCoverage     : '60',
-                          minimumClassCoverage      : '88',
-                          maximumComplexityCoverage : '61',
-                          minimumLineCoverage       : '95',
-                          minimumMethodCoverage     : '76',
+                          minimumBranchCoverage     : '59',
+                          maximumComplexityCoverage : '60',
+                          minimumLineCoverage       : '96',
+                          minimumMethodCoverage     : '77',
+                          minimumClassCoverage      : '86',
                           execPattern               : '**/build/jacoco/*.exec',
                           classPattern              : '**/build/tmp/kotlin-classes',
                           sourcePattern             : 'src/main/kotlin',
@@ -82,6 +82,18 @@ pipeline {
                         group: 'Android',
                         title: 'AAR File size in MB',
                         style: 'line'
+            }
+        }
+        stage("Generate Docs") {
+            steps {
+                sh './gradlew :app:dokkaJavadoc'
+                publishHTML(target: [allowMissing         : false,
+                                     alwaysLinkToLastBuild: true,
+                                     keepAll              : true,
+                                     reportDir            : 'app/build/dokka/javadoc',
+                                     reportFiles          : 'index.html',
+                                     reportName           : 'Kotlin Docs',
+                                     reportTitles         : 'The Report'])
             }
         }
     }

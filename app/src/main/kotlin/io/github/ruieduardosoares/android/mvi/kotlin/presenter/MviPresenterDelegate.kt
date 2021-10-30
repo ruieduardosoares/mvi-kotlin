@@ -46,25 +46,22 @@ internal class MviPresenterDelegate<S : Any, V : MviView<S>>(
         return mIntentCreator
     }
 
-    fun detachView(isViewPermanentlyDetached: Boolean, mviPresenter: AbstractMviPresenter<S, V>) {
+    fun detachView() {
         if (mState != State.ATTACHED) {
             return
         }
         mStateRelayToViewRenderBinder.dispose()
         mViewIntentsBinder.unbind()
         mView = null
-        if (isViewPermanentlyDetached) {
-            mviPresenter.unbindIntents()
-        }
         mState = State.DETACHED
     }
 
-    fun destroy(mviPresenter: AbstractMviPresenter<S, V>) {
+    fun destroy() {
         if (mState == State.DESTROYED) {
             return
         }
         if (mState == State.ATTACHED) {
-            detachView(true, mviPresenter)
+            detachView()
         }
         mStateStreamToStateRelayBinder.dispose()
         mViewIntentsBinder.destroy()

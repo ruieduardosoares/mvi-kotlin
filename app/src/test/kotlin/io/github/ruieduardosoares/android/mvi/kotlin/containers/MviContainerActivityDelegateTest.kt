@@ -153,7 +153,7 @@ internal class MviContainerActivityDelegateTest {
 
         //Then
         verify(mMviContainerActivity, only()).isChangingConfigurations
-        verify(mPresenter, only()).detachView(eq(false))
+        verify(mPresenter, only()).detachView()
         verify(mLazyMviPresenterMemento, only()).value
         verify(mMviPresenterMemento, only()).keep(eq(mPresenter))
     }
@@ -179,7 +179,7 @@ internal class MviContainerActivityDelegateTest {
 
         //Then
         verify(mMviContainerActivity, only()).isChangingConfigurations
-        verify(mPresenter, only()).detachView(eq(true))
+        verify(mPresenter, only()).detachView()
         verifyZeroInteractions(mLazyMviPresenterMemento, mMviPresenterMemento)
     }
 
