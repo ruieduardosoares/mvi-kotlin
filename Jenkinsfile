@@ -32,7 +32,7 @@ pipeline {
                                          reportTitles         : 'The Report'])
 
                     step([$class                    : 'JacocoPublisher',
-                          buildOverBuild            : true,
+                          buildOverBuild            : false,
                           changeBuildStatus         : true,
                           minimumInstructionCoverage: '86',
                           minimumBranchCoverage     : '59',
