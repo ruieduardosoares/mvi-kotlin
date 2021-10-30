@@ -3,7 +3,7 @@ pipeline {
         dockerfile {
             filename 'Dockerfile'
             dir 'tools/dockers/android-sdk'
-            args '-u root:root' //todo here because gradlew needs to access root folder /opt
+            args '-u root:root' //here because gradlew needs to access root folder /opt
         }
     }
     options {
@@ -101,7 +101,7 @@ pipeline {
         //Here because we are overriding jenkins user with container root user
         //Always cleanup at the end regardless of pipeline status
         always {
-            sh 'rm -R .gradle/ build app/build app/.gradle/'
+            sh 'rm -R .gradle/ build app/build'
         }
     }
 }
