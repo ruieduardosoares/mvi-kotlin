@@ -36,7 +36,7 @@ pipeline {
                           changeBuildStatus         : true,
                           minimumInstructionCoverage: '86',
                           minimumBranchCoverage     : '59',
-                          maximumComplexityCoverage : '61',
+                          maximumComplexityCoverage : '60',
                           minimumLineCoverage       : '96',
                           minimumMethodCoverage     : '77',
                           minimumClassCoverage      : '86',
