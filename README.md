@@ -1,6 +1,6 @@
 # mvi-kotlin
 
-Modern android mvi library heavily inspired by https://github.com/sockeqwe/mosby
+Modern android mvi library written in kotlin heavily inspired by https://github.com/sockeqwe/mosby
 
 ### Why was this library created, if the mosby library works fine?
 Currently, one of the disadvantages that we detected on the mosby library is that, for those who dig the internals, it uses a mechanism for Activity, Fragment, ViewGroup to retain the
@@ -34,6 +34,18 @@ dependencies {
   implementation "io.github.ruieduardosoares:android-mvi-kotlin:x.x.x"
 }
 ```
+
+## How do i use this lib in my project
+
+If you are new to this mvi pattern i suggest to read some beginner toturials as the learning curve can quite steap at the beginning specially when you havent implemented any other pattern in the past.
+
+Some guides:
+- [Mvi-Architecture-Toturial-Getting-Started](https://www.raywenderlich.com/817602-mvi-architecture-for-android-tutorial-getting-started#toc-anchor-006)
+- [Ultimate MVI Guide](https://hannesdorfmann.com/android/mosby3-mvi-1/)
+
+Try implement some simple screens with this pattern, like a simple screen with a button that shows a toast message
+
+See our sample project to get a hang of it
 
 ## License
 ```
