@@ -74,7 +74,7 @@ pipeline {
         stage('Code quality') {
             steps {
                 sh './gradlew lintDebug'
-                recordIssues tool: androidLintParser(pattern: 'app/build/reports/lint-results-debug.xml')
+                recordIssues tool: androidLintParser(pattern: 'app/build/reports/lint-results-debug.xml') , qualityGates: [[threshold: 3, type: 'TOTAL_HIGH', unstable: true]]
 
                 sh './gradlew detektDebug'
                 recordIssues tool: detekt(pattern: 'app/build/reports/detekt.xml')
