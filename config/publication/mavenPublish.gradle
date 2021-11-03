@@ -63,11 +63,7 @@ afterEvaluate {
                 //Coordinates
                 groupId = "io.github.ruieduardosoares"
                 artifactId = "android-mvi-kotlin"
-                if (project.hasProperty('release')) {
-                    version = rootProject.ext.versionName
-                } else {
-                    version = "$rootProject.ext.versionName-SNAPSHOT"
-                }
+                version = rootProject.ext.versionName
 
                 //POM mandatory configurations to publish to https://central.sonatype.org
                 pom {
