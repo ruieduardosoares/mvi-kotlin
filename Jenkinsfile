@@ -74,13 +74,13 @@ pipeline {
         stage('Code quality') {
             steps {
                 sh './gradlew lintDebug'
-                recordIssues tool: androidLintParser(pattern: 'app/build/reports/lint-results-debug.xml'), qualityGates: [[threshold: 3, type: 'TOTAL_HIGH', unstable: true], [threshold: 0, type: 'TOTAL_NORMAL', unstable: true], [threshold: 0, type: 'TOTAL_LOW', unstable: true]]
+                recordIssues tool: androidLintParser(pattern: 'app/build/reports/lint-results-debug.xml'), qualityGates: [[threshold: 3, type: 'TOTAL_HIGH', unstable: true], [threshold: 1, type: 'TOTAL_NORMAL', unstable: true], [threshold: 1, type: 'TOTAL_LOW', unstable: true]]
 
                 sh './gradlew detektDebug'
-                recordIssues tool: detekt(pattern: 'app/build/reports/detekt.xml'), qualityGates: [[threshold: 0, type: 'TOTAL_HIGH', unstable: true], [threshold: 0, type: 'TOTAL_NORMAL', unstable: true], [threshold: 0, type: 'TOTAL_LOW', unstable: true]]
+                recordIssues tool: detekt(pattern: 'app/build/reports/detekt.xml'), qualityGates: [[threshold: 1, type: 'TOTAL_HIGH', unstable: true], [threshold: 1, type: 'TOTAL_NORMAL', unstable: true], [threshold: 1, type: 'TOTAL_LOW', unstable: true]]
 
                 sh './gradlew cpdCheck'
-                recordIssues tool: cpd(pattern: 'app/build/reports/cpd/cpdCheck.xml')
+                recordIssues tool: cpd(pattern: 'app/build/reports/cpd/cpdCheck.xml'), qualityGates: [[threshold: 1, type: 'TOTAL_HIGH', unstable: true], [threshold: 1, type: 'TOTAL_NORMAL', unstable: true], [threshold: 3, type: 'TOTAL_LOW', unstable: true]]
             }
         }
         stage("Dexcount & Size") {
