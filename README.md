@@ -22,7 +22,7 @@ To import the library into you project you need to configure the following in yo
 ```
 repositories {
     // ...
-    maven { url "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/" }
+    maven { url "https://s01.oss.sonatype.org/content/repositories/releases" }
 }
 ```
 Then on the same file you need to import the latest version of the library
