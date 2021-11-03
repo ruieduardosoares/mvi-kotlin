@@ -63,6 +63,7 @@ internal class StateRelayToViewRenderBinder<S : Any>(
             )
         }
 
+        @Suppress("EmptyFunctionBlock")
         override fun onComplete() {}
     }
 }
