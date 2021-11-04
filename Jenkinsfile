@@ -81,6 +81,8 @@ pipeline {
 
                 sh './gradlew cpdCheck'
                 recordIssues tool: cpd(pattern: 'app/build/reports/cpd/cpdCheck.xml'), qualityGates: [[threshold: 1, type: 'TOTAL_HIGH', unstable: true], [threshold: 1, type: 'TOTAL_NORMAL', unstable: true], [threshold: 3, type: 'TOTAL_LOW', unstable: true]]
+
+                recordIssues tool: taskScanner(excludePattern: '**/mvi-sample/**,**/gradle/**,**/res/**,**/tools/**,**/config/quality/**', highTags: 'FIXME', normalTags: 'TODO', lowTags: '@Deprecated', ignoreCase: true), qualityGates: [[threshold: 1, type: 'TOTAL_HIGH', unstable: true], [threshold: 1, type: 'TOTAL_NORMAL', unstable: true], [threshold: 1, type: 'TOTAL_LOW', unstable: true]]
             }
         }
         stage("Dexcount & Size") {
