@@ -32,7 +32,7 @@ task writeDebugAppAarSizeToCsv {
         if (!appAarFile.exists()) {
             throw new IllegalStateException("Cannot find app-debug.aar, perhaps not assembled yet")
         }
-        def sizeMB = appAarFile.length() / 10**5
+        def sizeMB = appAarFile.length() / 10**6
         def df = new DecimalFormat("#.##");
         def sizeMbFormatted = df.format(sizeMB)
         def appSizeCsvFile = new File("app/build/appsize.csv")
