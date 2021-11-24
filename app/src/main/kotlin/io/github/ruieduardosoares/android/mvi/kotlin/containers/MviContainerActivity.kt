@@ -58,15 +58,16 @@ import io.github.ruieduardosoares.android.mvi.kotlin.presenter.AbstractMviPresen
  *     override fun createPresenter(): SomeMviPresenter = SomeMviPresenter()
  * }
  * ```
- * For more implementation details see [MviContainerActivityDelegate]
+ * For more implementation details see [MviContainerDelegate]
  *
  * @param S the type of the view state that will be used
  * @param V the type of the MviView that will be used
  */
 @MainThread
-abstract class MviContainerActivity<S : Any, V : MviView<S>> : AppCompatActivity() {
+abstract class MviContainerActivity<S : Any, V : MviView<S>> : AppCompatActivity(),
+    MviContainer<S, V> {
 
-    private val mDelegate by lazy { MviContainerActivityDelegate(this) }
+    private val mDelegate by lazy { MviContainerDelegate(this) }
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,7 +81,7 @@ abstract class MviContainerActivity<S : Any, V : MviView<S>> : AppCompatActivity
      *
      * @return view instance of [V] type
      */
-    abstract fun getView(): V
+    abstract override fun getView(): V
 
     /**
      * You must implement this method and provide a new instance of the given presenter.
@@ -88,7 +89,12 @@ abstract class MviContainerActivity<S : Any, V : MviView<S>> : AppCompatActivity
      *
      * @return new instance of an implementation of [AbstractMviPresenter]
      */
-    abstract fun createPresenter(): AbstractMviPresenter<S, V>
+    abstract override fun createPresenter(): AbstractMviPresenter<S, V>
+
+    /**
+     * @return if this activity container is survivable, thus is true if only changing configurations
+     */
+    final override fun isSurvivable(): Boolean = isChangingConfigurations
 
     @CallSuper
     override fun onStart() {
