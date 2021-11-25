@@ -22,40 +22,40 @@
  * SOFTWARE.
  */
 
-package io.github.ruieduardosoares.android.mvi.kotlin.containers
+package io.github.ruieduardosoares.android.mvi.kotlin.containers.fragment
 
 import android.os.Bundle
 import androidx.annotation.CallSuper
+import androidx.annotation.ContentView
 import androidx.annotation.MainThread
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import io.github.ruieduardosoares.android.mvi.kotlin.MviView
+import io.github.ruieduardosoares.android.mvi.kotlin.containers.MviContainerDelegate
 import io.github.ruieduardosoares.android.mvi.kotlin.presenter.AbstractMviPresenter
 
 /**
- * Mvi container activity that merely acts as a container for the view and the presenter.
- * This container shouldn't be your view implementation but rather a container for your view.
+ * Mvi container fragment that merely acts as a container for the view and the presenter.
+ * This fragment container shouldn't be your view implementation but rather a container for your view.
  *
  * Example:
  * ```
- * class SomeViewContainerActivity : MviContainerActivity<SomeViewState, SomeMviView>() {
+ * class SomeViewContainerFragment : MviContainerFragment<SomeViewState, SomeMviView>(R.layout.fragment_layout) {
  *
- *     private lateinit var mSomeMviView: SomeMviView
+ *      private val mMviView = SomeMviView()
  *
- *     private lateinit var mBinding: ActivitySomeViewBinding
+ *      override fun getMviView(): SomeMviView = mMviView
  *
- *     override fun onCreate(savedInstanceState: Bundle?) {
- *         super.onCreate(savedInstanceState)
+ *      override fun createPresenter(): AbstractMviPresenter<SomeViewState, SomeMviView> = SomeMviPresenter()
  *
- *         //Using android viewBinding
- *         mBinding = ActivitySomeViewBinding.inflate(layoutInflater)
- *         setContentView(mBinding.root)
+ *      override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+ *          super.onViewCreated(view, savedInstanceState)
+ *          mMviView.mBinding = FragmentTestBinding.bind(view) // using view binding
+ *      }
  *
- *         mSomeMviView = SomeMviView(mBinding)
- *     }
- *
- *     override fun getView(): SomeMviView = mSomeMviView
- *
- *     override fun createPresenter(): SomeMviPresenter = SomeMviPresenter()
+ *      override fun onDestroyView() {
+ *          super.onDestroyView()
+ *          mMviView.mBinding = null //important to clear reference to binding/android-view
+ *      }
  * }
  * ```
  * For more implementation details see [MviContainerDelegate]
@@ -64,10 +64,14 @@ import io.github.ruieduardosoares.android.mvi.kotlin.presenter.AbstractMviPresen
  * @param V the type of the MviView that will be used
  */
 @MainThread
-abstract class MviContainerActivity<S : Any, V : MviView<S>> : AppCompatActivity(),
-    MviContainer<S, V> {
+abstract class MviContainerFragment<S : Any, V : MviView<S>> : Fragment {
 
-    private val mDelegate by lazy { MviContainerDelegate(this) }
+    constructor() : super()
+
+    @ContentView
+    constructor(contentLayoutId: Int) : super(contentLayoutId)
+
+    private val mDelegate by lazy { MviContainerDelegate(MviContainerFragmentAdapter(this)) }
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,11 +81,11 @@ abstract class MviContainerActivity<S : Any, V : MviView<S>> : AppCompatActivity
 
     /**
      * You must implement this method and provide a view instance of [V] type.
-     * It should return the same view instance as long your activity is not destroyed.
+     * It should return the same mvi view instance as long your fragment is not destroyed.
      *
      * @return view instance of [V] type
      */
-    abstract override fun getView(): V
+    abstract fun getMviView(): V
 
     /**
      * You must implement this method and provide a new instance of the given presenter.
@@ -89,12 +93,7 @@ abstract class MviContainerActivity<S : Any, V : MviView<S>> : AppCompatActivity
      *
      * @return new instance of an implementation of [AbstractMviPresenter]
      */
-    abstract override fun createPresenter(): AbstractMviPresenter<S, V>
-
-    /**
-     * @return if this activity container is survivable, thus is true if only changing configurations
-     */
-    final override fun isSurvivable(): Boolean = isChangingConfigurations
+    abstract fun createPresenter(): AbstractMviPresenter<S, V>
 
     @CallSuper
     override fun onStart() {
