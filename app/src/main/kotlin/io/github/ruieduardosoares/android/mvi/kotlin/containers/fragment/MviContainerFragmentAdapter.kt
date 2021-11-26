@@ -52,7 +52,7 @@ internal class MviContainerFragmentAdapter<S : Any, V : MviView<S>>(
     /**
      * Is survivable informs if this fragment container has any characteristic state that makes
      * it survivable through its lifecycle. For that we use the [Fragment.isRemoving] state,
-     * so the container is survivable is not being removed - "!isRemoving"
+     * so the container is survivable if not being removed - "!isRemoving"
      *
      * Note:
      * A detached fragment is likely to be on backstack, so although a detached fragment is still
