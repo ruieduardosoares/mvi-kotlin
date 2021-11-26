@@ -81,7 +81,7 @@ pipeline {
                 recordIssues tool: detekt(pattern: 'app/build/reports/detekt.xml'), qualityGates: [[threshold: 1, type: 'TOTAL_HIGH', unstable: true], [threshold: 1, type: 'TOTAL_NORMAL', unstable: true], [threshold: 1, type: 'TOTAL_LOW', unstable: true]]
 
                 sh './gradlew cpdCheck'
-                recordIssues tool: cpd(pattern: 'app/build/reports/cpd/cpdCheck.xml'), qualityGates: [[threshold: 1, type: 'TOTAL_HIGH', unstable: true], [threshold: 1, type: 'TOTAL_NORMAL', unstable: true], [threshold: 3, type: 'TOTAL_LOW', unstable: true]]
+                recordIssues tool: cpd(pattern: 'app/build/reports/cpd/cpdCheck.xml'), qualityGates: [[threshold: 1, type: 'TOTAL_HIGH', unstable: true], [threshold: 1, type: 'TOTAL_NORMAL', unstable: true], [threshold: 5, type: 'TOTAL_LOW', unstable: true]]
 
                 recordIssues tool: taskScanner(includePattern: '*/src/**', highTags: 'FIXME', normalTags: 'TODO', lowTags: '@Deprecated', ignoreCase: true), qualityGates: [[threshold: 1, type: 'TOTAL_HIGH', unstable: true], [threshold: 1, type: 'TOTAL_NORMAL', unstable: true], [threshold: 1, type: 'TOTAL_LOW', unstable: true]]
             }
