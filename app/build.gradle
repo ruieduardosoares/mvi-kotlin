@@ -171,8 +171,11 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$rootProject.ext.kotlinVersion"
 
     // UI components
+    //noinspection GradleDependency
     implementation "androidx.core:core-ktx:$rootProject.ext.androidxCoreKtxVersion"
+    //noinspection GradleDependency
     implementation "androidx.activity:activity-ktx:$rootProject.ext.androidxActivityKtxVersion"
+    //noinspection GradleDependency
     implementation "androidx.appcompat:appcompat:$rootProject.ext.androidxAppCompatVersion"
 
     // RxJava
