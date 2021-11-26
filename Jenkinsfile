@@ -55,19 +55,20 @@ pipeline {
                                          reportName           : 'Tests',
                                          reportTitles         : 'The Report'])
 
-                    step([$class                    : 'JacocoPublisher',
-                          buildOverBuild            : false,
-                          changeBuildStatus         : true,
-                          minimumInstructionCoverage: '86',
-                          minimumBranchCoverage     : '59',
-                          maximumComplexityCoverage : '60',
-                          minimumLineCoverage       : '96',
-                          minimumMethodCoverage     : '77',
-                          minimumClassCoverage      : '86',
-                          execPattern               : '**/build/jacoco/*.exec',
-                          classPattern              : '**/build/tmp/kotlin-classes',
-                          sourcePattern             : 'src/main/kotlin',
-                          exclusionPattern          : 'src/test/**'])
+                    jacoco(
+                            buildOverBuild            : false,
+                            changeBuildStatus         : true,
+                            minimumInstructionCoverage: '84',
+                            minimumBranchCoverage     : '59',
+                            maximumComplexityCoverage : '58',
+                            minimumLineCoverage       : '94',
+                            minimumMethodCoverage     : '74',
+                            minimumClassCoverage      : '83',
+                            execPattern               : '**/build/jacoco/*.exec',
+                            classPattern              : '**/build/tmp/kotlin-classes',
+                            sourcePattern             : 'src/main/kotlin',
+                            exclusionPattern          : 'src/test/**'
+                    )
                 }
             }
         }
