@@ -55,32 +55,33 @@ pipeline {
                                          reportName           : 'Tests',
                                          reportTitles         : 'The Report'])
 
-                    step([$class                    : 'JacocoPublisher',
-                          buildOverBuild            : false,
-                          changeBuildStatus         : true,
-                          minimumInstructionCoverage: '86',
-                          minimumBranchCoverage     : '59',
-                          maximumComplexityCoverage : '60',
-                          minimumLineCoverage       : '96',
-                          minimumMethodCoverage     : '77',
-                          minimumClassCoverage      : '86',
-                          execPattern               : '**/build/jacoco/*.exec',
-                          classPattern              : '**/build/tmp/kotlin-classes',
-                          sourcePattern             : 'src/main/kotlin',
-                          exclusionPattern          : 'src/test/**'])
+                    jacoco(
+                            buildOverBuild            : false,
+                            changeBuildStatus         : true,
+                            minimumInstructionCoverage: '84',
+                            minimumBranchCoverage     : '59',
+                            maximumComplexityCoverage : '58',
+                            minimumLineCoverage       : '94',
+                            minimumMethodCoverage     : '74',
+                            minimumClassCoverage      : '83',
+                            execPattern               : '**/build/jacoco/*.exec',
+                            classPattern              : '**/build/tmp/kotlin-classes',
+                            sourcePattern             : 'src/main/kotlin',
+                            exclusionPattern          : 'src/test/**'
+                    )
                 }
             }
         }
         stage('Code quality') {
             steps {
                 sh './gradlew lintDebug'
-                recordIssues tool: androidLintParser(pattern: 'app/build/reports/lint-results-debug.xml'), qualityGates: [[threshold: 3, type: 'TOTAL_HIGH', unstable: true], [threshold: 1, type: 'TOTAL_NORMAL', unstable: true], [threshold: 1, type: 'TOTAL_LOW', unstable: true]]
+                recordIssues tool: androidLintParser(pattern: 'app/build/reports/lint-results-debug.xml'), qualityGates: [[threshold: 4, type: 'TOTAL_HIGH', unstable: true], [threshold: 1, type: 'TOTAL_NORMAL', unstable: true], [threshold: 1, type: 'TOTAL_LOW', unstable: true]]
 
                 sh './gradlew detektDebug'
                 recordIssues tool: detekt(pattern: 'app/build/reports/detekt.xml'), qualityGates: [[threshold: 1, type: 'TOTAL_HIGH', unstable: true], [threshold: 1, type: 'TOTAL_NORMAL', unstable: true], [threshold: 1, type: 'TOTAL_LOW', unstable: true]]
 
                 sh './gradlew cpdCheck'
-                recordIssues tool: cpd(pattern: 'app/build/reports/cpd/cpdCheck.xml'), qualityGates: [[threshold: 1, type: 'TOTAL_HIGH', unstable: true], [threshold: 1, type: 'TOTAL_NORMAL', unstable: true], [threshold: 3, type: 'TOTAL_LOW', unstable: true]]
+                recordIssues tool: cpd(pattern: 'app/build/reports/cpd/cpdCheck.xml'), qualityGates: [[threshold: 1, type: 'TOTAL_HIGH', unstable: true], [threshold: 1, type: 'TOTAL_NORMAL', unstable: true], [threshold: 5, type: 'TOTAL_LOW', unstable: true]]
 
                 recordIssues tool: taskScanner(includePattern: '*/src/**', highTags: 'FIXME', normalTags: 'TODO', lowTags: '@Deprecated', ignoreCase: true), qualityGates: [[threshold: 1, type: 'TOTAL_HIGH', unstable: true], [threshold: 1, type: 'TOTAL_NORMAL', unstable: true], [threshold: 1, type: 'TOTAL_LOW', unstable: true]]
             }

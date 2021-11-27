@@ -31,13 +31,13 @@ import io.github.ruieduardosoares.android.mvi.kotlin.MviView
 import io.github.ruieduardosoares.android.mvi.kotlin.presenter.AbstractMviPresenter
 
 @MainThread
-internal class MviContainerActivityDelegate<S : Any, V : MviView<S>>(
-    private val mMviContainerActivity: MviContainerActivity<S, V>,
+internal class MviContainerDelegate<S : Any, V : MviView<S>>(
+    private val mMviContainer: MviContainer<S, V>,
     private val mLazyMviPresenterMemento: Lazy<MviContainerPresenterMemento> =
-        lazyOf(MviContainerPresenterMemento(ViewModelProvider(mMviContainerActivity)))
+        lazyOf(MviContainerPresenterMemento(ViewModelProvider(mMviContainer)))
 ) {
 
-    private val mMviView: V = mMviContainerActivity.getView()
+    private val mMviView: V = mMviContainer.getView()
 
     private var mMviPresenter: AbstractMviPresenter<S, V>? = null
 
@@ -48,11 +48,11 @@ internal class MviContainerActivityDelegate<S : Any, V : MviView<S>>(
     @Suppress("UNCHECKED_CAST")
     private fun loadPresenter(savedInstanceState: Bundle?): AbstractMviPresenter<S, V> =
         if (savedInstanceState == null) {
-            mMviContainerActivity.createPresenter()
+            mMviContainer.createPresenter()
         } else {
             val mviPresenter = mLazyMviPresenterMemento.value.recover()
             mviPresenter?.run { this as AbstractMviPresenter<S, V> }
-                ?: mMviContainerActivity.createPresenter()
+                ?: mMviContainer.createPresenter()
         }
 
     fun onStart() {
@@ -61,16 +61,15 @@ internal class MviContainerActivityDelegate<S : Any, V : MviView<S>>(
 
     fun onStop() {
         mMviPresenter?.let { presenter ->
-            val isChangingConfigurations = mMviContainerActivity.isChangingConfigurations
             presenter.detachView()
-            if (isChangingConfigurations) {
+            if (mMviContainer.isSurvivable()) {
                 mLazyMviPresenterMemento.value.keep(presenter)
             }
         }
     }
 
     fun onDestroy() {
-        if (mMviContainerActivity.isChangingConfigurations.not()) {
+        if (mMviContainer.isSurvivable().not()) {
             mMviPresenter?.destroy()
         }
         mMviPresenter = null

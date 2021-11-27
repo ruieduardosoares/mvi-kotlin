@@ -42,10 +42,10 @@ import org.mockito.kotlin.verifyZeroInteractions
 import org.mockito.kotlin.whenever
 
 @ExtendWith(MockitoExtension::class)
-internal class MviContainerActivityDelegateTest {
+internal class MviContainerDelegateTest {
 
     @Mock
-    lateinit var mMviContainerActivity: MviContainerActivity<Any, MviView<Any>>
+    lateinit var mMviContainer: MviContainer<Any, MviView<Any>>
 
     @Mock
     lateinit var mMviView: MviView<Any>
@@ -59,27 +59,27 @@ internal class MviContainerActivityDelegateTest {
     @Mock
     lateinit var mMviPresenterMemento: MviContainerPresenterMemento
 
-    lateinit var mDelegate: MviContainerActivityDelegate<Any, MviView<Any>>
+    lateinit var mDelegate: MviContainerDelegate<Any, MviView<Any>>
 
 
     @BeforeEach
     internal fun setUp() {
-        mDelegate = MviContainerActivityDelegate(mMviContainerActivity, mLazyMviPresenterMemento)
+        mDelegate = MviContainerDelegate(mMviContainer, mLazyMviPresenterMemento)
     }
 
     @Test
     internal fun onCreate_whenWithoutSavedInstance_thenActivityContainerGetViewAndCreatePresenter() {
 
         //Given
-        whenever(mMviContainerActivity.createPresenter()).thenReturn(mPresenter)
+        whenever(mMviContainer.createPresenter()).thenReturn(mPresenter)
 
         //When
         mDelegate.onCreate(null)
 
         //Then
-        verify(mMviContainerActivity).createPresenter()
-        verify(mMviContainerActivity).getView()
-        verifyNoMoreInteractions(mMviContainerActivity)
+        verify(mMviContainer).createPresenter()
+        verify(mMviContainer).getView()
+        verifyNoMoreInteractions(mMviContainer)
         verifyZeroInteractions(mLazyMviPresenterMemento, mMviPresenterMemento)
     }
 
@@ -95,7 +95,7 @@ internal class MviContainerActivityDelegateTest {
         mDelegate.onCreate(savedInstance)
 
         //Then
-        verify(mMviContainerActivity, only()).getView()
+        verify(mMviContainer, only()).getView()
         verify(mLazyMviPresenterMemento, only()).value
         verify(mMviPresenterMemento, only()).recover()
     }
@@ -107,16 +107,16 @@ internal class MviContainerActivityDelegateTest {
         val savedInstance = mock<Bundle>()
         whenever(mLazyMviPresenterMemento.value).thenReturn(mMviPresenterMemento)
         whenever(mMviPresenterMemento.recover()).thenReturn(null)
-        whenever(mMviContainerActivity.createPresenter()).thenReturn(mPresenter)
+        whenever(mMviContainer.createPresenter()).thenReturn(mPresenter)
 
         //When
         mDelegate.onCreate(savedInstance)
 
         //Then
-        verify(mMviContainerActivity).getView()
+        verify(mMviContainer).getView()
         verify(mLazyMviPresenterMemento, only()).value
-        verify(mMviContainerActivity).createPresenter()
-        verifyNoMoreInteractions(mMviContainerActivity)
+        verify(mMviContainer).createPresenter()
+        verifyNoMoreInteractions(mMviContainer)
     }
 
     @Test
@@ -133,9 +133,9 @@ internal class MviContainerActivityDelegateTest {
     internal fun onStart_whenCreated_thenAttachViewToPresenter() {
 
         //Given
-        whenever(mMviContainerActivity.createPresenter()).thenReturn(mPresenter)
-        whenever(mMviContainerActivity.getView()).thenReturn(mMviView)
-        mDelegate = MviContainerActivityDelegate(mMviContainerActivity, mLazyMviPresenterMemento)
+        whenever(mMviContainer.createPresenter()).thenReturn(mPresenter)
+        whenever(mMviContainer.getView()).thenReturn(mMviView)
+        mDelegate = MviContainerDelegate(mMviContainer, mLazyMviPresenterMemento)
         mDelegate.onCreate(null)
 
         //When
@@ -156,17 +156,17 @@ internal class MviContainerActivityDelegateTest {
     }
 
     @Test
-    internal fun onStop_whenCreatedAndStoppingForConfigurationChanges_thenDetachViewAndKeepPresenterInMemento() {
+    internal fun onStop_whenCreatedAndStoppingAndSurvivable_thenDetachViewAndKeepPresenterInMemento() {
 
         //Given
-        whenever(mMviContainerActivity.createPresenter()).thenReturn(mPresenter)
-        whenever(mMviContainerActivity.getView()).thenReturn(mMviView)
+        whenever(mMviContainer.createPresenter()).thenReturn(mPresenter)
+        whenever(mMviContainer.getView()).thenReturn(mMviView)
         whenever(mLazyMviPresenterMemento.value).thenReturn(mMviPresenterMemento)
-        mDelegate = MviContainerActivityDelegate(mMviContainerActivity, mLazyMviPresenterMemento)
+        mDelegate = MviContainerDelegate(mMviContainer, mLazyMviPresenterMemento)
         mDelegate.onCreate(null)
-        whenever(mMviContainerActivity.isChangingConfigurations).thenReturn(true)
+        whenever(mMviContainer.isSurvivable()).thenReturn(true)
         clearInvocations(
-            mMviContainerActivity,
+            mMviContainer,
             mPresenter,
             mLazyMviPresenterMemento,
             mMviPresenterMemento
@@ -176,23 +176,23 @@ internal class MviContainerActivityDelegateTest {
         mDelegate.onStop()
 
         //Then
-        verify(mMviContainerActivity, only()).isChangingConfigurations
+        verify(mMviContainer, only()).isSurvivable()
         verify(mPresenter, only()).detachView()
         verify(mLazyMviPresenterMemento, only()).value
         verify(mMviPresenterMemento, only()).keep(eq(mPresenter))
     }
 
     @Test
-    internal fun onStop_whenCreatedAndStoppingNotForConfigurationChanges_thenDetachViewButDontStorePresenterInMemento() {
+    internal fun onStop_whenCreatedAndStoppingAndNotSurvivable_thenDetachViewAndDoNotStorePresenterInMemento() {
 
         //Given
-        whenever(mMviContainerActivity.createPresenter()).thenReturn(mPresenter)
-        whenever(mMviContainerActivity.getView()).thenReturn(mMviView)
-        mDelegate = MviContainerActivityDelegate(mMviContainerActivity, mLazyMviPresenterMemento)
+        whenever(mMviContainer.createPresenter()).thenReturn(mPresenter)
+        whenever(mMviContainer.getView()).thenReturn(mMviView)
+        mDelegate = MviContainerDelegate(mMviContainer, mLazyMviPresenterMemento)
         mDelegate.onCreate(null)
-        whenever(mMviContainerActivity.isChangingConfigurations).thenReturn(false)
+        whenever(mMviContainer.isSurvivable()).thenReturn(false)
         clearInvocations(
-            mMviContainerActivity,
+            mMviContainer,
             mPresenter,
             mLazyMviPresenterMemento,
             mMviPresenterMemento
@@ -202,22 +202,22 @@ internal class MviContainerActivityDelegateTest {
         mDelegate.onStop()
 
         //Then
-        verify(mMviContainerActivity, only()).isChangingConfigurations
+        verify(mMviContainer, only()).isSurvivable()
         verify(mPresenter, only()).detachView()
         verifyZeroInteractions(mLazyMviPresenterMemento, mMviPresenterMemento)
     }
 
     @Test
-    internal fun onDestroy_whenForConfigurationChanges_thenDoNothing() {
+    internal fun onDestroy_whenSurvivable_thenDoNothing() {
 
         //Given
-        whenever(mMviContainerActivity.createPresenter()).thenReturn(mPresenter)
-        whenever(mMviContainerActivity.getView()).thenReturn(mMviView)
-        mDelegate = MviContainerActivityDelegate(mMviContainerActivity, mLazyMviPresenterMemento)
+        whenever(mMviContainer.createPresenter()).thenReturn(mPresenter)
+        whenever(mMviContainer.getView()).thenReturn(mMviView)
+        mDelegate = MviContainerDelegate(mMviContainer, mLazyMviPresenterMemento)
         mDelegate.onCreate(null)
-        whenever(mMviContainerActivity.isChangingConfigurations).thenReturn(true)
+        whenever(mMviContainer.isSurvivable()).thenReturn(true)
         clearInvocations(
-            mMviContainerActivity,
+            mMviContainer,
             mPresenter,
             mLazyMviPresenterMemento,
             mMviPresenterMemento
@@ -227,21 +227,21 @@ internal class MviContainerActivityDelegateTest {
         mDelegate.onDestroy()
 
         //Then
-        verify(mMviContainerActivity, only()).isChangingConfigurations
+        verify(mMviContainer, only()).isSurvivable()
         verifyZeroInteractions(mPresenter, mLazyMviPresenterMemento, mMviPresenterMemento)
     }
 
     @Test
-    internal fun onDestroy_whenNotForConfigurationChanges_thenDestroyPresenter() {
+    internal fun onDestroy_whenNotSurvivable_thenDestroyPresenter() {
 
         //Given
-        whenever(mMviContainerActivity.createPresenter()).thenReturn(mPresenter)
-        whenever(mMviContainerActivity.getView()).thenReturn(mMviView)
-        mDelegate = MviContainerActivityDelegate(mMviContainerActivity, mLazyMviPresenterMemento)
+        whenever(mMviContainer.createPresenter()).thenReturn(mPresenter)
+        whenever(mMviContainer.getView()).thenReturn(mMviView)
+        mDelegate = MviContainerDelegate(mMviContainer, mLazyMviPresenterMemento)
         mDelegate.onCreate(null)
-        whenever(mMviContainerActivity.isChangingConfigurations).thenReturn(false)
+        whenever(mMviContainer.isSurvivable()).thenReturn(false)
         clearInvocations(
-            mMviContainerActivity,
+            mMviContainer,
             mPresenter,
             mLazyMviPresenterMemento,
             mMviPresenterMemento
@@ -251,7 +251,7 @@ internal class MviContainerActivityDelegateTest {
         mDelegate.onDestroy()
 
         //Then
-        verify(mMviContainerActivity, only()).isChangingConfigurations
+        verify(mMviContainer, only()).isSurvivable()
         verify(mPresenter, only()).destroy()
         verifyZeroInteractions(mLazyMviPresenterMemento, mMviPresenterMemento)
     }
