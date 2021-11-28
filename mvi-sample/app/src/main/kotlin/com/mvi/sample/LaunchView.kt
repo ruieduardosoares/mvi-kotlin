@@ -3,7 +3,7 @@ package com.mvi.sample
 import android.app.Activity
 import android.content.Intent
 import com.mvi.sample.databinding.ActivityLaunchBinding
-import com.mvi.sample.home.HomeViewContainerActivity
+import com.mvi.sample.home.HomeFragmentContainerActivity
 import io.github.ruieduardosoares.android.mvi.kotlin.MviView
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
@@ -49,7 +49,7 @@ class LaunchView : MviView<LaunchViewState> {
             LaunchViewState.AnimationFinished -> {
                 val context = mBinding.root.context
                 val activity = context as Activity
-                val intent = Intent(context, HomeViewContainerActivity::class.java)
+                val intent = Intent(context, HomeFragmentContainerActivity::class.java)
                 context.startActivity(intent)
                 activity.finish()
             }
