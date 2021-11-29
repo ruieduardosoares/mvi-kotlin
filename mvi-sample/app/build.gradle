@@ -39,6 +39,8 @@ ext {
 repositories {
     google()
     mavenCentral()
+    //uncomment to test snapshot version first
+//    maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots" }
 }
 
 android {
@@ -89,7 +91,7 @@ dependencies {
     implementation "com.google.android.material:material:$project.ext.googleMaterialVersion"
 
     // --- Android Mvi Kotlin lib ---- //
-    implementation "io.github.ruieduardosoares:android-mvi-kotlin:0.1.0"
+    implementation "io.github.ruieduardosoares:android-mvi-kotlin:1.0.0"
 
     // RxJava
     implementation "io.reactivex.rxjava3:rxjava:$project.ext.rxJavaVersion"
