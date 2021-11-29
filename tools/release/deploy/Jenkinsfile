@@ -55,7 +55,7 @@ pipeline {
                                 passwordVariable: 'NEXUS_PASSWORD'
                         )
                 ]) {
-                    sh "./gradlew app:publishReleasePublicationToMavenRepository -P$RELEASE_TYPE -PossrhUsername=$NEXUS_USERNAME -PossrhPassword=$NEXUS_PASSWORD -Psigning.secretKeyRingFile=$FILE -Psigning.password=$SECRET_PASS -Psigning.keyId=$SECRET_ID"
+                    sh "./gradlew app:publishReleasePublicationToMavenRepository -P$RELEASE_TYPE -PossrhUsername=$NEXUS_USERNAME -PossrhPassword=$NEXUS_PASSWORD -Psigning.secretKeyRingFile=\"$FILE\" -Psigning.password=$SECRET_PASS -Psigning.keyId=$SECRET_ID"
                 }
             }
         }
